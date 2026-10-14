@@ -1,0 +1,959 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rdf:RDF xmlns:ol="urn:ontolink:" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export">
+    <rdf:type rdf:resource="urn:ontolink:Project" />
+    <ol:revision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">55</ol:revision>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ReWord 3 - export</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/actor-dev">
+    <rdf:type rdf:resource="urn:ontolink:Actor" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.939283+00:00</ol:createdAt>
+    <ol:role rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Builds and maintains the Electron application.</ol:role>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Developer</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/actor-user">
+    <rdf:type rdf:resource="urn:ontolink:Actor" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.812330+00:00</ol:createdAt>
+    <ol:role rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sole user managing passwords locally offline.</ol:role>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">End user</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-android-plan">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">62cc2a43db0d6f69e6309db66704e8833bf3d2161ba92eb77abf91fe1afc75ed</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.888212+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">plan</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ANDROID_AUTOFILL_PLAN.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-chrome-extension">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">893c7665a72cc8bbcd8267285c89c88cea82d8320128e46e3fbb5dc754b56b46</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.889212+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">extension</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">extension/manifest.json</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-contracts">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a0ee41e0345544f3798667bf43c2d78449a44e484db5e51d7a2757257e49ed7b</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.211584+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">contracts</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/architecture-contracts.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-database">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">493780e6c3cbe3a6232d2cdc00cb1cc40d66e58b44a7b8ee4ccfc8aeffb3abe8</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.189776+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">database.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">STALE</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-delivery">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">7085c75afcfed1db02f32af29214f40b4ec1f5a53c07743978f28662d0ed8d3d</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:42:44.419075+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">handoff</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/delivery-handoff.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-encryption">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9c4871d97256f6faf677210f55d51ed05d6c2362c2aa002e7e4e72de39c5db33</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.335207+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">encryption.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">STALE</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-implementation">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a2ec7de2054fae4ebdd40db510b2bbc6f26f6bea676be65940b2c43af7632545</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.104547+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/implementation-report.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-main">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">5cb02d25a667f8434c95b67ff77f8857825507088f9c6a89101d1468acaed2c4</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.054047+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">main.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">STALE</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-monitoring">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a72313b46a1561bc8add3fbd23ac91361ccbbefb2aed4edc041140e1eba4d30c</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:43:36.897807+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">monitoring</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/monitoring-snapshot.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-plan">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">14de6f1458bb225f0db00b7bff7f9d15da5aa71ac061449fdca25b7ed64643f2</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T18:23:44.183112+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">plan</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/implementation-plan.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-renderer">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">573cbc79c0ac9d0e904970f0b7c01e9c21c942b263d84f13312d1d4d1f57be46</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.480057+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renderer/renderer.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">STALE</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-requirements">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">39787f242934c4b2b107c6d16088f2809f50b5dc65df9ae321bae69f66566364</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:50:35.159729+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">requirements</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/discovery-requirements.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-styles">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">7ac7a9c5fcd2630026f224720ec5fd7584b486bbaba12c1ed554b2470cbb5892</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.770332+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renderer/styles.css</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">STALE</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-ui">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">806be453a52eef9134496bea2d37c9ba5650d437ddca18a9dc350b1d57faaf62</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.622364+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renderer/index.html</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">STALE</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-verification">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bf3e2885dee8120ac4f3a688d0a866bdb5ec96548db3e8c0db18637325d7692e</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:40.659599+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">verification</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/verification-report.md</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-web-core">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">7e9a55cd473fe9f2ff87fe06d1170db2ccdf9133a76733c363b9a22373256ba6</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.890212+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">core.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-web-ui">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a4cf8a2a075552792f412251ab620b6cf8d36b177b127f9b5ff6df1d09a63c6a</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.891212+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ui.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-worker">
+    <rdf:type rdf:resource="urn:ontolink:Artifact" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">e79e229b68f1b4650dd1e9982458ab23f4badd73f8674eb6833498ac7dd6b418</ol:contentHash>
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.891212+00:00</ol:createdAt>
+    <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">source</ol:kind>
+    <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">worker/index.js</ol:path>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CURRENT</ol:status>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/constraint-local-only">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.546359+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">No cloud sync. All data in electron-store on user machine. External only: favicon fetch.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Fully offline / local storage only</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/constraint-windows">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.670312+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electron-packager targets win32/x64. Build produces Windows .exe package.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Windows platform target (win32/x64)</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-aes-gcm">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-security-model</ol:basis>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:03.778055+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Authenticated encryption, per-record randomness, PBKDF2-SHA256 key derivation (100k iter).</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AES-256-GCM with per-record random salt+IV</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-electron-store">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-vault</ol:basis>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.095126+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Simpler deployment, no native binaries. Trade-off: full array load on each read.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electron-store over SQLite for persistence</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-google-favicon">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-favicon</ol:basis>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.409430+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">No API key needed, stored as base64 data URI. Falls back gracefully offline.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Google Favicon API for site icons</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-local-storage">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-vault</ol:basis>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:03.611752+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Privacy-first: passwords never leave device. electron-store on local filesystem.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Local-only storage via electron-store, no cloud</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-no-clipboard-clear">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-clipboard</ol:basis>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.244823+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Passwords copied to clipboard remain indefinitely. Recommended: auto-clear after 30s.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">No clipboard auto-clear (known gap)</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-sandbox">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-security-model</ol:basis>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:03.930420+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Defense-in-depth: renderer has no node access, XSS cannot escalate to system access.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sandbox + contextIsolation + preload bridge</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-delivery">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:42:44.830727+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">7085c75afcfed1db02f32af29214f40b4ec1f5a53c07743978f28662d0ed8d3d</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/delivery-handoff.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-delivery" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">7085c75afcfed1db02f32af29214f40b4ec1f5a53c07743978f28662d0ed8d3d</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-design-contracts">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.377588+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a0ee41e0345544f3798667bf43c2d78449a44e484db5e51d7a2757257e49ed7b</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/architecture-contracts.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-contracts" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a0ee41e0345544f3798667bf43c2d78449a44e484db5e51d7a2757257e49ed7b</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-disc-req">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:50:35.353154+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">39787f242934c4b2b107c6d16088f2809f50b5dc65df9ae321bae69f66566364</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/discovery-requirements.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-requirements" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">39787f242934c4b2b107c6d16088f2809f50b5dc65df9ae321bae69f66566364</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-implementation">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.474262+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a2ec7de2054fae4ebdd40db510b2bbc6f26f6bea676be65940b2c43af7632545</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/implementation-report.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a2ec7de2054fae4ebdd40db510b2bbc6f26f6bea676be65940b2c43af7632545</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-monitoring">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:43:37.463232+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a72313b46a1561bc8add3fbd23ac91361ccbbefb2aed4edc041140e1eba4d30c</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/monitoring-snapshot.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-monitoring" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a72313b46a1561bc8add3fbd23ac91361ccbbefb2aed4edc041140e1eba4d30c</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-plan">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T18:23:44.513578+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">14de6f1458bb225f0db00b7bff7f9d15da5aa71ac061449fdca25b7ed64643f2</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/implementation-plan.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-plan" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">14de6f1458bb225f0db00b7bff7f9d15da5aa71ac061449fdca25b7ed64643f2</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-verification">
+    <rdf:type rdf:resource="urn:ontolink:Evidence" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:41.073441+00:00</ol:createdAt>
+    <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bf3e2885dee8120ac4f3a688d0a866bdb5ec96548db3e8c0db18637325d7692e</ol:proofHash>
+    <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/verification-report.md</ol:proofPath>
+    <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-verification" />
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bf3e2885dee8120ac4f3a688d0a866bdb5ec96548db3e8c0db18637325d7692e</ol:targetHash>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-1">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-app-type" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:47:41.635349+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-10">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-lock" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.296713+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-11">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-reset" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.424258+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-12">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/constraint-local-only" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.563475+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-13">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/constraint-windows" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.697384+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-14">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/actor-user" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.826892+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-15">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/actor-dev" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.954266+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-16">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-main" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.070197+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-17">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-database" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.206712+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-18">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-encryption" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.353968+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-19">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-renderer" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.484072+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-2">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-master-password" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:15.503165+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-20">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-ui" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.636935+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-21">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-styles" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:49:13.803676+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-22">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-requirements" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:50:35.195438+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-23">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-disc-req" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:50:35.376676+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-24">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-discover" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:51:09.897689+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-25">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-discover" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:51:10.047599+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-26">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/dec-local-storage" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:03.644462+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-27">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/dec-aes-gcm" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:03.811219+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-28">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/dec-sandbox" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:03.970595+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-29">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/dec-electron-store" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.130765+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-3">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-master-password" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.388192+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-30">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/dec-no-clipboard-clear" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.277874+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-31">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/dec-google-favicon" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.444580+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-32">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/risk-hardcoded-key" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.609344+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-33">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/risk-mem-password" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.760837+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-34">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/risk-clipboard" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.931589+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-35">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/risk-pbkdf2-blocking" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.095195+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-36">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-contracts" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.260891+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-37">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-design-contracts" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.426811+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-38">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-design" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.597519+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-39">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-design" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.777560+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-4">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-vault" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.515886+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-40">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-plan" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T18:23:44.238908+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-41">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-plan" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T18:23:44.582539+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-42">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-plan" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T18:23:44.916494+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-43">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.180177+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-44">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-implementation" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.537513+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-45">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-build" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.920880+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-46">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-verification" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:40.738693+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-47">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-verification" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:41.148461+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-48">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-verify" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:41.560452+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-49">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-delivery" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:42:44.498615+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-5">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-favicon" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.654077+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-50">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-delivery" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:42:44.926174+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-51">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-deliver" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:42:45.348383+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-52">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/artifact-monitoring" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:43:37.024580+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-53">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/ev-monitoring" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:43:37.592749+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-54">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/task-monitor" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:43:38.119025+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-6">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-import-export" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.776994+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-7">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-search" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.909875+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-8">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-clipboard" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.037062+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-9">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
+    <ol:affects rdf:resource="urn:ontolink:project:reword-3-export/req-security-model" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.165679+00:00</ol:createdAt>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-app-type">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:47:41.635349+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ReWord is a local-first offline password manager for Windows using Electron with AES encryption.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Desktop password manager - Electron.js</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-clipboard">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.022349+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">IPC-based clipboard write. No auto-clear yet implemented.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Clipboard copy for passwords and usernames</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-favicon">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.649011+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Main process fetches favicon as base64 when URL is added. Displayed as site icon.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automatic favicon fetch via Google Favicon API</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-import-export">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.776994+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Export to JSON or styled XLSX. Import from JSON or browser CSV (Chrome, Edge, Firefox, Bitwarden).</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Import/export: JSON backup, XLSX, CSV from browsers</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-lock">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.285577+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">User can lock vault, clearing masterPassword from memory.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Manual vault lock</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-master-password">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:15.503165+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">User sets master password on first launch. Supports optional hint. Change master password re-encrypts all stored passwords.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Master password authentication with hint support</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-reset">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.417466+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Removes all websites, accounts, and master password. Resets to initial state.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Full vault reset - wipes all data</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-search">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.890884+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Live filtering by website name, URL, or username.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Real-time search across all websites and accounts</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-security-model">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.141134+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">contextIsolation=true, nodeIntegration=false, sandbox=true. IPC via preload bridge only.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Secure Electron: sandboxed renderer, no nodeIntegration</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-vault">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.503454+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Passwords AES-encrypted with master key via electron-store. Websites group multiple accounts (username, password, notes, timestamps).</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AES-encrypted vault: websites + accounts</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/risk-clipboard">
+    <rdf:type rdf:resource="urn:ontolink:Risk" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.894272+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Copied passwords persist in clipboard indefinitely.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">No clipboard auto-clear after password copy</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/risk-hardcoded-key">
+    <rdf:type rdf:resource="urn:ontolink:Risk" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.561423+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Static key reword-secure-key-2026 protects casual access but not reverse engineering.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electron-store encryptionKey is hardcoded in source</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/risk-mem-password">
+    <rdf:type rdf:resource="urn:ontolink:Risk" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.727989+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Memory dump during active session could expose master password.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Master password held in-process memory for session</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/risk-pbkdf2-blocking">
+    <rdf:type rdf:resource="urn:ontolink:Risk" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.044455+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Blocks UI during login/encryption. Should move to worker thread.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PBKDF2 runs synchronously on main process</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-autofill">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.894211+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-android-crypto" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:build" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">تطوير خدمة الملء التلقائي (AutofillService) للتكامل مع تطبيقات ومواقع أندرويد</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-biometrics">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.895211+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-android-autofill" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:build" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">تكامل التحقق ببصمة الإصبع أو الوجه (BiometricPrompt) مع Android Keystore</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-crypto">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.893211+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-android-setup" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:build" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">برمجة فك وتشفير الخزينة (AES-256-GCM + PBKDF2) ومزامنة Cloudflare Worker</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-web-core" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-setup">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.892212+00:00</ol:createdAt>
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:plan" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">plan</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">READY</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">إعداد مشروع أندرويد وهيكل التطبيق (Kotlin / Jetpack Compose)</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-ui-sync">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.896210+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-android-biometrics" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:build" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">بناء واجهات الإعداد والمزامنة وإدخال Sync ID وكلمة المرور الرئيسية</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-web-ui" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-verification">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.897210+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-android-ui-sync" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">qa</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:verify" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">verification</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">اختبار وتوثيق عمل الملء التلقائي في مختلف تطبيقات ومتصفحات أندرويد</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-build">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.837532+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-plan" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:build" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Build project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-deliver">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:42:45.252333+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-verify" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:deliver" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">handoff</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Deliver project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-delivery" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-design">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:05.560174+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-discover" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:design" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">contracts</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Design project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-contracts" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-discover">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:51:09.866017+00:00</ol:createdAt>
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:discover" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">requirements</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Discover project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-requirements" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-monitor">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:43:37.995434+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-deliver" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:monitor" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">monitoring</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Monitor project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-monitoring" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-plan">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T18:23:44.846573+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-design" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:plan" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">plan</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Plan project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-plan" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-verify">
+    <rdf:type rdf:resource="urn:ontolink:Task" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:41.472948+00:00</ol:createdAt>
+    <ol:dependsOn rdf:resource="urn:ontolink:project:reword-3-export/task-build" />
+    <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
+    <ol:phase rdf:resource="urn:ontolink:verify" />
+    <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">verification</ol:requiredKind>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Verify project work</ol:title>
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-verification" />
+    <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
+  </rdf:Description>
+</rdf:RDF>

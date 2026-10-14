@@ -1,0 +1,7 @@
+name = "reword-vault-sync"
+main = "worker/index.js"
+compatibility_date = "2026-06-09"
+
+[[kv_namespaces]]
+binding = "VAULTS"
+id = "11d0165d992241cdb2889b75515a6a65"

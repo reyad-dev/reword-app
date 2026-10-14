@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReWord</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- 1. Screen: Loading -->
+    <div id="screen-loading" class="screen active">
+      <div class="loader-wrap">
+        <div class="shield-logo pulse">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <div class="loading-text">جاري فحص الخزينة...</div>
+      </div>
+    </div>
+
+    <!-- 2. Screen: Lock / Login -->
+    <div id="screen-login" class="screen">
+      <div class="auth-header">
+        <div class="shield-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <h2>ReWord</h2>
+        <p>الخزينة مقفلة — أدخل كلمة المرور الرئيسية</p>
+      </div>
+
+      <form id="form-login" class="auth-form">
+        <div class="input-group">
+          <input type="password" id="login-pass" placeholder="كلمة المرور الرئيسية" autofocus autocomplete="current-password" required>
+          <button type="button" class="btn-toggle-eye" id="btn-toggle-login-pass">👁️</button>
+        </div>
+        <div id="login-hint" class="hint-text"></div>
+        <button type="submit" id="btn-do-login" class="btn-primary">
+          <span>فتح الخزينة</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <a href="#" id="link-goto-connect">ربط أو تغيير إعدادات المزامنة</a>
+      </div>
+    </div>
+
+    <!-- 3. Screen: Connect Vault (From Cloudflare) -->
+    <div id="screen-connect" class="screen">
+      <div class="auth-header">
+        <div class="shield-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <h2>ربط الخزينة السحابية</h2>
+        <p>قم بالربط مع Cloudflare Worker لجلب خزينتك</p>
+      </div>
+
+      <form id="form-connect" class="auth-form">
+        <div class="form-field">
+          <label>Sync ID</label>
+          <input type="text" id="conn-sid" placeholder="معرّف المزامنة (Sync ID)" required>
+        </div>
+        <div class="form-field">
+          <label>Worker URL</label>
+          <input type="url" id="conn-wurl" value="https://reword-vault-sync.moasaar6.workers.dev" placeholder="رابط الـ Worker" required>
+        </div>
+        <div class="form-field">
+          <label>كلمة المرور الرئيسية</label>
+          <input type="password" id="conn-pass" placeholder="كلمة المرور لفك التشفير" required>
+        </div>
+        <button type="submit" id="btn-do-connect" class="btn-primary">
+          <span>جلب وفتح الخزينة</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <a href="#" id="link-goto-login">العودة لشاشة الدخول</a>
+      </div>
+    </div>
+
+    <!-- 4. Screen: Main Vault Unlocked -->
+    <div id="screen-main" class="screen">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-brand">
+          <div class="shield-icon-sm">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          </div>
+          <div>
+            <span class="brand-title">ReWord</span>
+            <span id="sync-indicator" class="sync-status ok" title="حالة المزامنة">● سحابي</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btn-sync-now" class="icon-btn" title="مزامنة فورية">🔄</button>
+          <button id="btn-open-generator" class="icon-btn" title="توليد كلمة مرور">⚡</button>
+          <button id="btn-lock" class="icon-btn" title="قفل الخزينة">🔒</button>
+        </div>
+      </header>
+
+      <!-- Active Page Section (Current Tab) -->
+      <section class="active-site-section">
+        <div class="section-title">
+          <span>الموقع الحالي:</span>
+          <strong id="current-domain-label">-</strong>
+        </div>
+        <div id="current-site-matches" class="matches-list">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- Search Bar -->
+      <div class="search-box">
+        <input type="text" id="vault-search-input" placeholder="🔍 ابحث في كل الحسابات والمواقع...">
+      </div>
+
+      <!-- All Vault Items -->
+      <div id="vault-list" class="vault-items-scroll">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- Bottom Floating Action Bar -->
+      <footer class="app-footer">
+        <button id="btn-add-credential" class="btn-primary-sm">
+          <span>+ إضافة حساب جديد</span>
+        </button>
+      </footer>
+    </div>
+
+    <!-- Modal: Add / Edit Credential -->
+    <div id="modal-add" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title">إضافة حساب جديد</h3>
+          <button id="btn-close-modal" class="btn-close">&times;</button>
+        </div>
+        <form id="form-save-credential">
+          <div class="form-field">
+            <label>اسم الموقع أو التطبيق</label>
+            <input type="text" id="add-site-name" placeholder="مثال: Google أو Facebook" required>
+          </div>
+          <div class="form-field">
+            <label>رابط الموقع (URL)</label>
+            <input type="text" id="add-site-url" placeholder="https://example.com">
+          </div>
+          <div class="form-field">
+            <label>اسم المستخدم / البريد الإلكتروني</label>
+            <input type="text" id="add-user" placeholder="user@example.com" required>
+          </div>
+          <div class="form-field">
+            <label>كلمة المرور</label>
+            <div class="input-with-action">
+              <input type="password" id="add-pass" placeholder="كلمة المرور" required>
+              <button type="button" id="btn-gen-for-input" class="btn-action-icon" title="توليد كلمة مرور قوية">⚡</button>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>ملاحظات (اختياري)</label>
+            <textarea id="add-notes" rows="2" placeholder="ملاحظات سرية إضافية"></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="margin-top:12px;">حفظ في الخزينة</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Password Generator -->
+    <div id="modal-generator" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>مولّد كلمات المرور القوية</h3>
+          <button id="btn-close-gen-modal" class="btn-close">&times;</button>
+        </div>
+        <div class="gen-result-box">
+          <div id="gen-password-display" class="gen-password-text">ReWord123!@#</div>
+          <button id="btn-copy-generated" class="btn-primary-sm">نسخ</button>
+        </div>
+        <div class="gen-controls">
+          <label>الطول: <span id="gen-len-label">16</span></label>
+          <input type="range" id="gen-len-slider" min="8" max="32" value="16">
+        </div>
+        <button id="btn-regenerate" class="btn-secondary" style="width:100%;margin-top:10px;">توليد كلمة مرور أخرى 🔄</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="ReWord - مدير كلمات المرور الآمن يعمل بدون إنترنت">
+<title>ReWord - مدير كلمات المرور</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="../icon.png">
+<link rel="stylesheet" href="style.css?v=12">
+<script>
+function cleanWorkerUrl(url) {
+  if (!url) return '';
+  let u = url.trim();
+  u = u.replace(/['"`‘’“”′‘]+/g, '');
+  u = u.replace(/\/+$/, '').replace(/\/vault$/, '');
+  u = u.trim().replace(/^\/+/, '');
+  if (u && !/^https?:\/\//i.test(u)) {
+    u = 'https://' + u;
+  }
+  return u;
+}
+</script>
+</head>
+<body>
+
+<!-- SVG gradient def -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- SPLASH -->
+<div id="screen-splash" class="screen active">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px">
+    <div class="splash-logo">
+      <div class="ring"></div><div class="ring ring2"></div>
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+    </div>
+    <div class="splash-title">ReWord</div>
+    <div class="splash-sub">مدير كلمات المرور الآمن</div>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div id="screen-setup" class="screen">
+  <div class="auth-screen-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <h2>إنشاء خزينتك</h2>
+      <p class="auth-desc">اختر كلمة مرور رئيسية قوية — لا يمكن استعادتها إذا نسيتها</p>
+      <div class="form-group">
+        <label>كلمة المرور الرئيسية</label>
+        <div class="input-wrap">
+          <input type="password" id="su-pass" placeholder="أدخل كلمة مرور قوية" autocomplete="new-password" oninput="checkStrength(this.value)">
+          <button class="eye-btn" onclick="toggleEye('su-pass',this)" type="button"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="s-fill"></div></div>
+        <div class="strength-text" id="s-text"></div>
+      </div>
+      <div class="form-group">
+        <label>تأكيد كلمة المرور</label>
+        <div class="input-wrap">
+          <input type="password" id="su-confirm" placeholder="أعد إدخال كلمة المرور" autocomplete="new-password">
+          <button class="eye-btn" onclick="toggleEye('su-confirm',this)" type="button"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>تلميح <span class="opt">(اختياري)</span></label>
+        <input class="field" type="text" id="su-hint" placeholder="تلميح لمساعدتك على التذكر">
+      </div>
+      <!-- SYNC SETTINGS -->
+      <div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:4px;background:rgba(124,58,237,0.05)">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px">☁️ إعدادات المزامنة <span style="font-weight:400;color:var(--text3);font-size:11px">(اختياري - للمزامنة بين الأجهزة)</span></div>
+        <div class="form-group" style="margin-bottom:12px"><label>Sync ID <span class="opt">(اسم أو عبارة تتذكرها)</span></label><input class="field" type="text" id="su-sid" placeholder="مثال: ahmed-passwords-2026" autocomplete="off"></div>
+        <div class="form-group" style="margin-bottom:0"><label>Worker URL <span class="opt">(من Cloudflare)</span></label><input class="field" type="url" id="su-wurl" placeholder="https://reword-sync.xxxx.workers.dev" onblur="this.value = cleanWorkerUrl(this.value)"></div>
+      </div>
+      <p class="error-msg" id="su-err"></p>
+      <button class="btn btn-primary btn-full" id="su-btn" onclick="doSetup()">
+        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        إنشاء الخزينة
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen">
+  <div class="auth-screen-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <h2>مرحباً بعودتك</h2>
+      <p class="auth-desc" id="login-hint">أدخل كلمة المرور الرئيسية لفتح خزينتك</p>
+      <div class="form-group">
+        <label>كلمة المرور الرئيسية</label>
+        <div class="input-wrap">
+          <input type="password" id="ln-pass" placeholder="كلمة المرور الرئيسية" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+          <button class="eye-btn" onclick="toggleEye('ln-pass',this)" type="button"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+        <p class="error-msg" id="ln-err"></p>
+      </div>
+      <button class="btn btn-primary btn-full" id="ln-btn" onclick="doLogin()">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        فتح الخزينة
+      </button>
+      <button class="btn btn-ghost btn-full" style="margin-top:6px" onclick="showReset()">إعادة ضبط الخزينة</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONNECT EXISTING VAULT (new device) -->
+<div id="screen-connect" class="screen">
+  <div class="auth-screen-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3)">
+        <svg viewBox="0 0 24 24" style="fill:#10b981"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      </div>
+      <h2>ربط خزنة موجودة</h2>
+      <p class="auth-desc">أدخل بيانات المزامنة وكلمة المرور لجلب خزنتك من السحابة</p>
+      <div class="form-group">
+        <label>Sync ID</label>
+        <input class="field" type="text" id="cn-sid" placeholder="مثال: ahmed-passwords-2026" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Worker URL</label>
+        <input class="field" type="url" id="cn-wurl" placeholder="https://reword-sync.xxxx.workers.dev" onblur="this.value = cleanWorkerUrl(this.value)">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور الرئيسية</label>
+        <div class="input-wrap">
+          <input type="password" id="cn-pass" placeholder="كلمة المرور الرئيسية" autocomplete="current-password" onkeydown="if(event.key==='Enter')doConnect()">
+          <button class="eye-btn" onclick="toggleEye('cn-pass',this)" type="button"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+        <p class="error-msg" id="cn-err"></p>
+      </div>
+      <button class="btn btn-primary btn-full" id="cn-btn" onclick="doConnect()">
+        <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+        جلب الخزنة من السحابة
+      </button>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-ghost btn-full" onclick="showScreen('screen-setup')">إنشاء خزنة جديدة</button>
+        <button class="btn btn-ghost btn-full" onclick="showScreen('screen-login')" id="cn-local-btn" style="display:none">دخول محلي</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MAIN APP -->
+<div id="screen-main" class="screen">
+  <div class="app-header">
+    <div class="header-left">
+      <div class="header-logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div>
+        <div class="header-title">ReWord</div>
+        <div class="header-stats" id="hdr-stats">0 موقع • 0 حساب</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div id="sync-dot" class="sync-dot hidden" title=""></div>
+      <!-- View Toggle -->
+      <div class="view-toggle">
+        <button class="view-btn active" id="vbtn-grid" onclick="setView('grid')" title="شبكة">
+          <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+        </button>
+        <button class="view-btn" id="vbtn-list" onclick="setView('list')" title="قائمة">
+          <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        </button>
+        <button class="view-btn" id="vbtn-compact" onclick="setView('compact')" title="مضغوط">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        </button>
+      </div>
+      <button class="icon-btn" onclick="toggleSearch()" title="بحث"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 5 1.49-1.49-5-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
+      <button class="icon-btn" onclick="openSettings()" title="الإعدادات"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.63-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+      <button class="icon-btn danger" onclick="doLock()" title="قفل"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></button>
+    </div>
+  </div>
+  <div class="search-bar hidden" id="search-bar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 5 1.49-1.49-5-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="search-inp" placeholder="ابحث عن موقع أو حساب..." oninput="doSearch(this.value)">
+      <button class="search-clear" onclick="clearSearch()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+  </div>
+  <!-- شريط الأوسمة / التاجات -->
+  <div id="tags-bar" class="tags-bar" style="display: none;"></div>
+  <!-- شريط العمليات الجماعية (Batch Actions) -->
+  <div id="batch-actions-bar" class="batch-actions-bar hidden">
+    <span id="batch-count" class="batch-count">تم تحديد 0 موقع</span>
+    <div class="batch-buttons">
+      <button class="btn btn-secondary btn-sm" onclick="openBatchTag()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg> تعيين وسم</button>
+      <button class="btn btn-secondary btn-sm" onclick="startBatchMerge()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M17 20.41L18.41 19 15 15.59V11h-2v3.59l3 3M12.5 4v7h1.9l-3 3-3-3H10.5V4h2z"/></svg> دمج المواقع</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBatchSites()">🗑️ حذف</button>
+      <button class="btn btn-secondary btn-sm" onclick="cancelBatchSelection()">إلغاء</button>
+    </div>
+  </div>
+  <!-- LIST VIEW -->
+  <div class="main-content" id="list-view"></div>
+  <!-- DETAIL VIEW -->
+  <div id="detail-view" class="screen" style="background:var(--bg)">
+    <div class="detail-header">
+      <button class="back-btn" onclick="showList()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <div style="flex:1;min-width:0"><div class="detail-title" id="det-name"></div><div class="detail-url" id="det-url"></div></div>
+      <button class="icon-btn" onclick="openAddAccount()" title="إضافة حساب"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+    </div>
+    <div class="main-content" id="detail-content"></div>
+  </div>
+  <button class="fab" onclick="openAddWebsite()" title="إضافة موقع"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+</div>
+
+<!-- MODAL: Add/Edit Website -->
+<div class="modal-overlay" id="modal-site">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg><span id="modal-site-title">إضافة موقع</span></div>
+    <div class="form-group"><label>اسم الموقع *</label><input class="field" type="text" id="site-name" placeholder="مثال: Google"></div>
+    <div class="form-group"><label>رابط الموقع <span class="opt">(اختياري)</span></label><input class="field" type="url" id="site-url" placeholder="https://google.com"></div>
+    <div class="form-group"><label>الأوسمة / التاجات <span class="opt">(مفصولة بفواصل)</span></label><input class="field" type="text" id="site-tags" placeholder="مثال: wordpress, blog, work"></div>
+    <p class="error-msg" id="site-err"></p>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('modal-site')">إلغاء</button>
+      <button class="btn btn-primary" style="flex:2" id="site-save-btn" onclick="saveSite()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add/Edit Account -->
+<div class="modal-overlay" id="modal-acc">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span id="modal-acc-title">إضافة حساب</span></div>
+    <div class="form-group"><label>اسم المستخدم / البريد *</label><input class="field" type="text" id="acc-user" placeholder="user@example.com" autocomplete="off"></div>
+    <div class="form-group">
+      <label>كلمة المرور *</label>
+      <div class="input-wrap">
+        <input type="password" id="acc-pass" placeholder="كلمة المرور" autocomplete="new-password">
+        <button class="eye-btn" onclick="toggleEye('acc-pass',this)" type="button"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:6px;padding:6px 0;font-size:12px" onclick="openGenPass()" type="button">⚡ توليد كلمة مرور قوية</button>
+    </div>
+    <div class="form-group"><label>ملاحظات <span class="opt">(اختياري)</span></label><textarea class="field" id="acc-notes" placeholder="أي ملاحظات..." rows="2"></textarea></div>
+    <p class="error-msg" id="acc-err"></p>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('modal-acc')">إلغاء</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveAccount()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Password Generator -->
+<div class="modal-overlay" id="modal-gen">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>مولّد كلمات المرور</div>
+    <div class="gen-result" id="gen-result">اضغط "توليد"</div>
+    <div class="length-row">
+      <span style="font-size:13px;color:var(--text2)">الطول</span>
+      <input type="range" id="gen-len" min="8" max="32" value="16" oninput="document.getElementById('gen-len-val').textContent=this.value;genPass()">
+      <span class="length-val" id="gen-len-val">16</span>
+    </div>
+    <div class="gen-options">
+      <label class="gen-opt active" id="opt-upper"><input type="checkbox" checked onchange="toggleOpt(this,'opt-upper');genPass()"> A-Z</label>
+      <label class="gen-opt active" id="opt-lower"><input type="checkbox" checked onchange="toggleOpt(this,'opt-lower');genPass()"> a-z</label>
+      <label class="gen-opt active" id="opt-num"><input type="checkbox" checked onchange="toggleOpt(this,'opt-num');genPass()"> 0-9</label>
+      <label class="gen-opt active" id="opt-sym"><input type="checkbox" checked onchange="toggleOpt(this,'opt-sym');genPass()"> !@#$</label>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" style="flex:1" onclick="genPass()">🔄 توليد</button>
+      <button class="btn btn-primary" style="flex:2" onclick="useGenPass()">✓ استخدام</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Settings -->
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.63-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/></svg>الإعدادات</div>
+    <div class="settings-item">
+      <div><div class="settings-label">📤 تصدير النسخة الاحتياطية</div><div class="settings-sub">حمّل ملف مشفر للمزامنة بين الأجهزة</div></div>
+      <button class="btn btn-secondary" onclick="doExport()">تصدير</button>
+    </div>
+    <div class="settings-item">
+      <div><div class="settings-label">📥 استيراد نسخة احتياطية</div><div class="settings-sub">استورد ملف .reword على جهاز جديد</div></div>
+      <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">استيراد</button>
+    </div>
+    <input type="file" id="import-file" accept=".reword,.json" style="display:none" onchange="doImport(this)">
+    <div class="settings-item">
+      <div><div class="settings-label">🗂️ استيراد من المتصفح (CSV)</div><div class="settings-sub">Chrome / Edge / Firefox / Safari</div></div>
+      <button class="btn btn-secondary" onclick="document.getElementById('csv-file').click()">استيراد CSV</button>
+    </div>
+    <input type="file" id="csv-file" accept=".csv,text/csv" style="display:none" onchange="doImportCSV(this)">
+    <div class="settings-item">
+      <div><div class="settings-label">📊 تصدير إلى إكسل (XLSX)</div><div class="settings-sub">تصدير بتنسيق احترافي مع تنسيق ألوان</div></div>
+      <button class="btn btn-secondary" onclick="doExportXLSX()">تصدير XLSX</button>
+    </div>
+    <div class="settings-item">
+      <div><div class="settings-label">☁️ إعدادات المزامنة</div><div class="settings-sub" id="settings-sync-info">غير مفعّلة</div></div>
+      <button class="btn btn-secondary" onclick="showSyncEdit()">تعديل</button>
+    </div>
+    <div class="settings-item" id="sync-edit-section" style="display:none;flex-direction:column;gap:10px">
+      <input class="field" type="text" id="set-sid" placeholder="Sync ID">
+      <input class="field" type="url" id="set-wurl" placeholder="Worker URL" onblur="this.value = cleanWorkerUrl(this.value)">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="flex:1" onclick="document.getElementById('sync-edit-section').style.display='none'">إلغاء</button>
+        <button class="btn btn-primary" style="flex:2" onclick="doUpdateSync()">حفظ</button>
+      </div>
+    </div>
+    <div class="settings-item">
+      <div><div class="settings-label">🔑 تغيير كلمة المرور الرئيسية</div><div class="settings-sub">إعادة تشفير الخزينة بكلمة مرور جديدة</div></div>
+      <button class="btn btn-secondary" onclick="showChangePwd()">تغيير</button>
+    </div>
+    <div class="settings-item" id="change-pwd-section" style="display:none;flex-direction:column;align-items:stretch;gap:10px">
+      <input class="field" type="password" id="cp-new" placeholder="كلمة المرور الجديدة">
+      <input class="field" type="password" id="cp-confirm" placeholder="تأكيد كلمة المرور">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="flex:1" onclick="document.getElementById('change-pwd-section').style.display='none'">إلغاء</button>
+        <button class="btn btn-primary" style="flex:2" onclick="doChangePwd()">حفظ</button>
+      </div>
+    </div>
+    <div class="settings-item">
+      <div><div class="settings-label" style="color:var(--danger)">🗑️ إعادة ضبط الخزينة</div><div class="settings-sub">حذف كل البيانات نهائياً</div></div>
+      <button class="btn btn-danger" onclick="showReset()">إعادة ضبط</button>
+    </div>
+    <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="closeModal('modal-settings')">إغلاق</button>
+  </div>
+</div>
+
+<!-- MODAL: Merge Websites -->
+<div class="modal-overlay" id="modal-merge">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;"><path d="M17 20.41L18.41 19 15 15.59V11h-2v3.59l3 3M12.5 4v7h1.9l-3 3-3-3H10.5V4h2z"/></svg>
+      <span>دمج المواقع</span>
+    </div>
+    <p style="font-size: 13px; color: var(--text3); margin-bottom: 12px; text-align: right;">
+      سيتم دمج حسابات وروابط الموقع المحدد مع موقع آخر.
+    </p>
+    <div class="form-group">
+      <label>الموقع الحالي (المصدر)</label>
+      <input class="field" type="text" id="merge-src-name" readonly style="opacity: 0.7; cursor: not-allowed;">
+    </div>
+    <div class="form-group">
+      <label>اختر الموقع المستهدف للدمج فيه *</label>
+      <select class="field" id="merge-tgt-select" style="width: 100%; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px;">
+        <!-- سيتم ملؤه ديناميكياً -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label>الاسم بعد الدمج</label>
+      <input class="field" type="text" id="merge-new-name" placeholder="أدخل اسم الموقع الجديد">
+    </div>
+    <div id="merge-preview" style="background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.15); border-radius: var(--radius-sm); padding: 12px; font-size: 12px; display: none; margin-bottom: 12px; text-align: right;">
+      <strong>معاينة الدمج:</strong>
+      <ul style="margin-right: 18px; margin-top: 6px; color: var(--text2); display: flex; flex-direction: column; gap: 4px; list-style-type: none; padding: 0;">
+        <li id="merge-pre-urls">الروابط المدمجة: </li>
+        <li id="merge-pre-accounts">عدد الحسابات المدمجة: </li>
+      </ul>
+    </div>
+    <p class="error-msg" id="merge-err"></p>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('modal-merge')">إلغاء</button>
+      <button class="btn btn-primary" style="flex:2" id="merge-save-btn" onclick="saveMerge()">تأكيد الدمج</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="core.js?v=3"></script>
+<script src="ui.js?v=7"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+{
+  "version": 3,
+  "skills": {
+    "ontolink-architecture": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-architecture/SKILL.md",
+      "skillFolderHash": "840af70931120b16f6c4cbd9f990e7faf65d85e4",
+      "installedAt": "2026-10-14T17:17:40.524Z",
+      "updatedAt": "2026-10-14T17:17:40.524Z"
+    },
+    "ontolink-delivery": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-delivery/SKILL.md",
+      "skillFolderHash": "b5866ee110500efc9d9d91494c21f8926ff90218",
+      "installedAt": "2026-10-14T17:17:40.534Z",
+      "updatedAt": "2026-10-14T17:17:40.534Z"
+    },
+    "ontolink-discovery": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-discovery/SKILL.md",
+      "skillFolderHash": "a88909447efb5bf36ecf511b90c2c5383f2fbfdf",
+      "installedAt": "2026-10-14T17:17:40.543Z",
+      "updatedAt": "2026-10-14T17:17:40.543Z"
+    },
+    "ontolink-implementation": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-implementation/SKILL.md",
+      "skillFolderHash": "de050c3d466eb09ac7ec75d096c5f3e5c1615605",
+      "installedAt": "2026-10-14T17:17:40.551Z",
+      "updatedAt": "2026-10-14T17:17:40.551Z"
+    },
+    "ontolink-monitoring": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-monitoring/SKILL.md",
+      "skillFolderHash": "b91c43edb2a95a80af022018e1b44ae6cdf0a48f",
+      "installedAt": "2026-10-14T17:17:40.560Z",
+      "updatedAt": "2026-10-14T17:17:40.560Z"
+    },
+    "ontolink-planning": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-planning/SKILL.md",
+      "skillFolderHash": "8bd191a0e541c7437c431fc8d44d84a75377faa8",
+      "installedAt": "2026-10-14T17:17:40.573Z",
+      "updatedAt": "2026-10-14T17:17:40.573Z"
+    },
+    "ontolink-skills": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-skills/SKILL.md",
+      "skillFolderHash": "34a36a18823b981435577f581b21bb5731300d92",
+      "installedAt": "2026-10-14T17:17:40.583Z",
+      "updatedAt": "2026-10-14T17:17:40.583Z"
+    },
+    "ontolink-verification": {
+      "source": "asgmodel/ontolink-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/asgmodel/ontolink-skills.git",
+      "skillPath": "skills/ontolink-verification/SKILL.md",
+      "skillFolderHash": "c478553ddefdd63c5770ef77e1b106be296ecec9",
+      "installedAt": "2026-10-14T17:17:40.597Z",
+      "updatedAt": "2026-10-14T17:17:40.597Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "76a98a285cb0434f3d39e1a873823556330e398b",
+      "installedAt": "2026-10-14T17:17:46.304Z",
+      "updatedAt": "2026-10-14T17:17:46.304Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "cline",
+    "codex",
+    "cursor",
+    "droid",
+    "gemini-cli",
+    "github-copilot",
+    "kilo",
+    "kimi-code-cli",
+    "opencode",
+    "pi",
+    "warp",
+    "zed"
+  ]
+}

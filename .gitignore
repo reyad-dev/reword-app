@@ -1,0 +1,19 @@
+# Node & Dependencies
+node_modules/
+package-lock.json
+
+# Cloudflare Wrangler
+.wrangler/
+.dev.vars
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Lock files
+*.lock
+*.owl.lock
+
+# Logs
+*.log
+npm-debug.log*
