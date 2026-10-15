@@ -17,10 +17,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 2c68a36dfcbbb0e06ef28d8d2781b103
-          projectName: reword-app
-          directory: .
+          command: pages deploy . --project-name=reword-app
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
