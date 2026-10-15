@@ -1,0 +1,44 @@
+name: Apply repository branding
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/apply-repo-branding.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  branding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add README icon and browser favicon
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          readme = Path('README.md')
+          s = readme.read_text(encoding='utf-8')
+          block = '<p align="center">\n  <img src="repo-icon.svg" width="180" alt="ReWord password manager icon" />\n</p>\n\n'
+          if 'repo-icon.svg' not in s:
+              readme.write_text(block + s, encoding='utf-8')
+
+          index = Path('index.html')
+          h = index.read_text(encoding='utf-8')
+          tag = '<link rel="icon" type="image/svg+xml" href="./repo-icon.svg?v=2">\n'
+          if 'repo-icon.svg?v=2' not in h:
+              h = h.replace('<head>\n', '<head>\n' + tag, 1)
+              index.write_text(h, encoding='utf-8')
+          PY
+
+      - name: Commit branding
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Apply project icon branding"
+          git push
