@@ -8,6 +8,7 @@
 [![Cloudflare Pages](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Pages-f38020?logo=cloudflare)](https://reword-app.pages.dev/)
 [![Cloudflare Workers](https://img.shields.io/badge/Backend-Cloudflare%20Workers%20KV-F38020?logo=cloudflare)](https://workers.cloudflare.com/)
 [![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-4285F4?logo=googlechrome)](./extension)
+[![Android App](https://img.shields.io/badge/Android%20App-Kotlin%20%2B%20Compose-3DDC84?logo=android)](./android)
 [![Security](https://img.shields.io/badge/Encryption-AES--256--GCM%20%2B%20PBKDF2%20(310k)-blueviolet)](#-security--cryptography-model)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
@@ -169,6 +170,27 @@ graph TD
 
 ---
 
+### ثالثاً: كيفية استخدام وبناء تطبيق الأندرويد (Android Native App)
+
+1. **بناء وتشغيل التطبيق عبر Android Studio:**
+   * افتح مجلد `android` في **Android Studio** (نسخة Iguana 2023.2.1 أو أحدث).
+   * انتظر حتى تكتمل مزامنة ملفات Gradle تلقائياً (`Gradle Sync`).
+   * وصّل هاتف أندرويد (Android 8.0+) أو شغّل محاكي Android Emulator، ثم اضغط **Run**.
+2. **تسجيل الدخول ومزامنة الخزينة المشفرة:**
+   * افتح تطبيق **ReWord** على الهاتف.
+   * أدخل الـ **Sync ID** وكلمة المرور الرئيسية ورابط الـ Worker (أو اتركه على الرابط الافتراضي).
+   * اضغط **"فتح الخزينة ومزامنتها"** ليتم جلب وفك تشفير الخزينة محلياً 100%.
+3. **تفعيل الملء التلقائي في كافة تطبيقات ومتصفحات الهاتف (Autofill Service):**
+   * انتقل إلى تبويب **الإعدادات (Settings)** داخل التطبيق.
+   * اضغط زر **"فتح إعدادات الملء التلقائي بالنظام"**.
+   * اختر **ReWord** كخدمة الملء التلقائي الافتراضية للجهاز.
+4. **الملء التلقائي الفوري والمصادقة بالبصمة (Biometrics):**
+   * عند فتح أي تطبيق (مثل Facebook, X, تطبيق البنك) أو متصفح ويب في الهاتف:
+   * اضغط على حقل اسم المستخدم أو كلمة المرور، ستظهر لك بطاقة ReWord الذكية.
+   * اختر حسابك، وأكّد العملية ببصمة الإصبع أو الوجه (`BiometricPrompt`) ليتم ملء البيانات فوراً!
+
+---
+
 ## 📂 هيكل المشروع (Project Structure)
 
 ```text
@@ -194,6 +216,11 @@ graph TD
 │   ├── popup.js            # منطق واجهة الإضافة وتعبئة الصفحة النشطة بضغطة زر
 │   ├── popup.css           # أنماط الواجهة السريعة
 │   └── icons/              # أيقونات الإضافة بأحجامها المختلفة
+│
+├── android/                # تطبيق أندرويد الأصلي المتكامل (Native Kotlin & Jetpack Compose)
+│   ├── app/                # وحدة التطبيق (UI, Crypto, Service, Network, Model)
+│   ├── build.gradle.kts    # إعدادات بناء Gradle للمشروع
+│   └── README.md           # دليل تشغيل وتثبيت تطبيق الأندرويد
 │
 ├── ANDROID_AUTOFILL_PLAN.md# وثيقة وخطة تطبيق الأندرويد القادم (Autofill Service & Biometrics)
 ├── knowledge.owl           # خريطة المعرفة والأنطولوجيا الرسمية للمشروع (OntoLink Graph)
@@ -236,6 +263,50 @@ npx wrangler deploy
 
 ---
 
+### 4. بناء وتشغيل تطبيق أندرويد (Android Studio):
+1. افتح مجلد `android` باستخدام **Android Studio** (نسخة Iguana أو Koala أو أحدث).
+2. سيقوم Android Studio بمزامنة حزم Gradle تلقائياً (`Gradle Sync`).
+3. اختر محاكي (Emulator) أو هاتف أندرويد حقيقي يعمل بنظام Android 8.0 (API 26) فما فوق.
+4. اضغط على زر **Run 'app'** (أو اختصار `Shift + F10`).
+5. راجع الدليل المخصص في [`android/README.md`](./android/README.md) لمزيد من التفاصيل.
+
+---
+
+## 📱 تطبيق أندرويد الأصلي والملء التلقائي للنظام (Native Android App & System-Wide Autofill)
+
+تمت إضافة تطبيق أندرويد أصلي (Native) متكامل مكتوب بلغة **Kotlin** مع أحدث واجهات **Jetpack Compose (Material 3)**، ليوفر تجربة أمان وملء تلقائي شاملة على الهواتف الذكية:
+
+<p align="center">
+  <img src="android/app_running_screenshot.png" width="300" alt="ReWord Android App Screenshot" />
+</p>
+
+### 🌟 أبرز مميزات تطبيق الأندرويد:
+1. **الملء التلقائي الشامل للنظام (Android Autofill Framework):**
+   * خدمة `ReWordAutofillService` القياسية المتوافقة مع أندرويد 8.0 فما فوق.
+   * التعرف التلقائي على حقول اسم المستخدم وكلمات المرور في **كافة التطبيقات** (مثل تطبيقات التواصل والبنوك والتسوق) وفي **جميع متصفحات الهواتف** (Chrome, Edge, Firefox, Samsung Internet).
+   * قائمة منسدلة فورية تظهر فوق حقول الإدخال لتعبئة الحساب المختار بلمسة واحدة.
+
+2. **المصادقة البيومترية والأمان العتادي (Biometrics & Android Keystore):**
+   * فتح الخزينة وتأكيد عمليات الملء التلقائي باستخدام **بصمة الإصبع أو بصمة الوجه (Fingerprint / Face ID)** عبر `BiometricPrompt`.
+   * تشفير وحماية مفتاح فك التشفير بواسطة عتاد الهاتف المشفر **Android Keystore (Hardware-backed)** لضمان أقصى درجات الحماية.
+
+3. **تطابق تشفيري 100% مع الويب والإضافة (`core.js`):**
+   * اشتقاق المفاتيح بخوارزمية **PBKDF2 مع HMAC-SHA256 بـ 310,000 دورة تكرار** ونفس حجم الـ Salt (32 بايت).
+   * تشفير متماثل **AES-256-GCM** مع علامة مصادقة 128-bit و IV عشوائي (12 بايت) لكل عملية حفظ.
+   * إمكانية فتح ومزامنة نفس الخزينة بين موقع الويب، وإضافة كروم، وتطبيق الأندرويد بسلاسة وأمان تام.
+
+4. **مزامنة سحابية بمبدأ المعرفة الصفرية (Cloudflare Worker Zero-Knowledge Sync):**
+   * يتصل التطبيق بنفس خادم Cloudflare Worker (`/vault`) لجلب ورفع كتل البيانات المشفرة (Encrypted Blobs).
+   * لا يمكن للخادم فك تشفير البيانات لأن التشفير وفك التشفير يتم محلياً على جهازك فقط.
+
+5. **واجهة مستخدم عصرية وأنيقة (Jetpack Compose & Material 3):**
+   * ثيم داكن فاخر ومتناسق مستوحى من هوية ReWord (Dark Slate, Violet & Cyan).
+   * شاشة ربط الخزينة عبر **Sync ID** ورابط الـ Worker.
+   * شاشة استعراض وبحث فوري في المواقع والحسابات مع إمكانية نسخ اسم المستخدم وكلمات المرور بلمسة واحدة.
+   * شاشة إعدادات للتحكم بالبصمة البيومترية وفتح إعدادات الملء التلقائي في النظام مباشرة بضغطة زر.
+
+---
+
 ## 🗺️ خريطة الأنطولوجيا وخطة التطوير القادمة (Roadmap & Ontology)
 
 المشروع مسجل ومنظم بالكامل عبر نظام **OntoLink** المعرفي في [`knowledge.owl`](./knowledge.owl).
@@ -247,6 +318,9 @@ npx wrangler deploy
 * [ ] **`task-android-autofill`:** برمجة `AutofillService` لنظام أندرويد للملء في كل التطبيقات والمواقع.
 * [ ] **`task-android-biometrics`:** تكامل التحقق ببصمة الإصبع أو الوجه (`BiometricPrompt` + Keystore).
 * [ ] **`task-android-ui-sync`:** بناء واجهات إدخال الـ Sync ID والربط السحابي.
+
+> [!NOTE]
+> 🎉 **تم إنجاز تطبيق الأندرويد بنجاح!** يتوفر التطبيق الأصلي كاملاً الآن في مجلد [`android/`](./android) مع دعم الـ Autofill Service الشامل، والمصادقة البيومترية (BiometricPrompt)، وتشفير متطابق بنسبة 100% مع الويب.
 
 ---
 

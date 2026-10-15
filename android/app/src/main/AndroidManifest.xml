@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Network permissions for Cloudflare Worker vault synchronization -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Biometric Authentication (Fingerprint & Face unlock) -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application
+        android:name=".ReWordApplication"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_reword_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_reword_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ReWord"
+        tools:targetApi="35">
+
+        <!-- Main UI Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ReWord"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Autofill Authentication Activity (Biometric/Master Password prompt on locked vault) -->
+        <activity
+            android:name=".service.AutofillAuthActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ReWord.Translucent" />
+
+        <!-- System-wide Autofill Service -->
+        <service
+            android:name=".service.ReWordAutofillService"
+            android:exported="true"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.autofill"
+                android:resource="@xml/autofill_service_config" />
+        </service>
+
+    </application>
+
+</manifest>

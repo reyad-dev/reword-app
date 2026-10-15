@@ -17,3 +17,19 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Android / Gradle
+android/.gradle/
+android/**/build/
+android/local.properties
+android/.idea/caches/
+android/.idea/workspace.xml
+android/.idea/deploymentTargetSelector.xml
+android/.idea/deviceManager.xml
+android/.idea/shelf/
+android/**/*.iml
