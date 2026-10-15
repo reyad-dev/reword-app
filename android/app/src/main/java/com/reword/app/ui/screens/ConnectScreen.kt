@@ -40,6 +40,8 @@ fun ConnectScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(BgDark)
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .padding(24.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,

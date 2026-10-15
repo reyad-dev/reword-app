@@ -1,40 +1,58 @@
-# ReWord 3 - Implementation Report
+# ReWord - Implementation Report
 
 ## Summary
-The ReWord Desktop Password Manager implementation is fully structured, modularized, and validated against the Architecture Contracts and Implementation Plan.
+The ReWord cross-platform password management system implementation is fully structured, modularized, and validated across Desktop (Web), Browser Extension (Manifest V3), and Android Native Application (Kotlin / Jetpack Compose).
 
 ---
 
 ## Implemented Components & Verification
 
-### 1. Cryptographic Layer (`encryption.js`)
-- **Key Derivation**: PBKDF2 with 100,000 iterations using SHA-256 for symmetric cipher keys and SHA-512 for master password verification.
-- **Symmetric Encryption**: AES-256-GCM authenticated cipher with random 32-byte salt and 16-byte IV per encryption operation.
-- **Authentication Tag**: 16-byte GCM authentication tag verifying ciphertext integrity against tampering.
-- **Fail-safe Rejection**: Wrong master passwords fail cleanly with standard decryption errors without leaking plaintext or key material.
+### 1. Android Application (`android/`)
+- **Crypto Engine (`com.reword.app.crypto.CryptoEngine`)**:
+  - AES-256-GCM authenticated cipher with PBKDF2-HMAC-SHA256 (100,000 iterations).
+  - 100% interoperable with Web, Cloudflare Worker, and Chrome extension encryption formats.
+- **Hardware Keystore & Biometrics (`KeystoreHelper` & `BiometricPrompt`)**:
+  - Hardware-backed master key storage via AndroidKeyStore provider.
+  - Seamless fingerprint & face unlock for vault decryption and autofill prompts.
+- **System Autofill Framework (`ReWordAutofillService`)**:
+  - Full Android Autofill Service intercepting credential inputs across apps and mobile browsers.
+  - Dynamic AssistStructure parser identifying usernames and password fields.
+  - Fallback dataset selection and candidate matching.
+- **Floating Shield Overlay Assistant (`FloatingShieldService` & `FloatingPickerActivity`)**:
+  - Persistent, draggable glowing shield icon on the screen edge (WindowManager overlay).
+  - Solves the ephemeral autofill issue: never abruptly disappears during typing.
+  - One-tap modal bottom-sheet with search, detected app matches, biometric unlock, and 1-tap copy/fill.
+- **Accessibility Direct Fill (`ReWordAccessibilityService`)**:
+  - Monitors `TYPE_VIEW_FOCUSED` events on input fields.
+  - Direct credential injection via `ACTION_SET_TEXT` into target fields.
+- **Quick Settings Tile (`ReWordTileService`)**:
+  - Dedicated Android notification shade tile for instant 1-second access to ReWord credentials.
+- **Design & Typography**:
+  - Bundled local Arabic font: Google Font **Cairo** (`res/font/cairo.ttf`) across all typography styles.
+  - Forced RTL layout direction with `LocalLayoutDirection provides LayoutDirection.Rtl`.
+  - LTR formatting for technical URLs and credentials.
+  - Favicon loading via **Coil Compose** (`https://www.google.com/s2/favicons?domain=...&sz=128`).
+  - Status bar safe area padding (`statusBarsPadding()` and `navigationBarsPadding()`).
+  - Web-like card badges, smooth 180° chevron rotation, and expand animations.
 
-### 2. IPC Bridge & Isolation (`preload.js` & `main.js`)
-- **Strict Context Isolation**: `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true`.
-- **Channel Parity**: 20 distinct IPC channels exposed via `electronAPI` in `preload.js` and handled by `ipcMain.handle()` in `main.js`.
-- **Security Boundary**: Renderer process never touches file system, SQLite/JSON stores, or network favicons directly.
+### 2. Chrome Extension (`extension/` - Version 1.1.0)
+- **Autofill In-field Badge Lifecycle**:
+  - Implemented 5-layer bulletproof visibility check `isFieldVisible()` (geometry, viewport boundaries, Chrome `checkVisibility`, full ancestor tree traversal for opacity/pointer-events/modals, and center-point hit testing to detect overlays).
+  - Form submission listener (`submit`) immediately destroying badges upon login.
+  - Button click hook (`click`) on login/submit buttons instantly triggering `clearAllBadges()`.
+  - Enter key handler on input fields wiping badges during SPA authentication.
+  - Orphan DOM button purging in `cleanDeadBadges()` running on MutationObserver, SPA URL transitions, and 350ms periodic safety checks.
+  - Bumped extension version to `1.1.0` in `manifest.json`.
 
-### 3. Storage Layer (`database.js`)
-- **Encrypted Store**: Handled using `electron-store` with encrypted storage keys.
-- **CRUD Operations**: Complete support for websites, multiple nested accounts, password hints, and vault reset.
-
-### 4. Import / Export & Compatibility
-- **Encrypted Backup**: Full JSON encrypted vault backup/restore.
-- **Excel Export**: ExcelJS integration for formatted `.xlsx` export.
-- **Browser Import**: CSV parser supporting Google Chrome, Microsoft Edge, and Brave password exports.
-
-### 5. Automated Test Suite (`tests/test-suite.js`)
-- `AES-256-GCM Encrypt & Decrypt Roundtrip` - PASS
-- `Decryption with Wrong Password Fails Safely` - PASS
-- `Master Password Hashing with Salt Verification` - PASS
-- `Encryption Produces Unique Ciphertext (Salt/IV Randomness)` - PASS
-- `IPC Channels Contract Validation` - PASS
+### 3. Web & Cloudflare Worker Synchronization
+- Secure zero-knowledge encrypted vault syncing between Web, Extension, and Android via Cloudflare KV.
 
 ---
+
+## Build Verification
+- **Android APK Build**: `assembleDebug` completed successfully (`app-debug.apk`, 19MB).
+- **Target SDK**: 35 (Android 15), Min SDK: 26 (Android 8.0).
+- **Tooling**: Gradle 8.11.1, Kotlin 2.0.21, Jetpack Compose BOM 2024.10.00, Microsoft OpenJDK 17.
 
 ## Status
 - **Phase**: `build`

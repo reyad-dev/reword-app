@@ -66,8 +66,9 @@ class ReWordAutofillService : AutofillService() {
 
         // Vault is unlocked: find matching site & accounts
         val matchingSites = findMatchingSites(activeVault, parsed.webDomain, parsed.packageName)
-        if (matchingSites.isEmpty()) {
-            // No matching site, offer all sites or show nothing
+        val candidateSites = if (matchingSites.isNotEmpty()) matchingSites else activeVault.sites.take(5)
+
+        if (candidateSites.isEmpty()) {
             callback.onSuccess(null)
             return
         }
@@ -77,8 +78,8 @@ class ReWordAutofillService : AutofillService() {
         val passwordId = parsed.passwordFields.firstOrNull()
 
         var hasDatasets = false
-        for (site in matchingSites) {
-            for (acc in site.accounts) {
+        for (site in candidateSites) {
+            for (acc in site.accounts.take(3)) {
                 val dataset = buildDataset(site, acc, usernameId, passwordId)
                 if (dataset != null) {
                     responseBuilder.addDataset(dataset)

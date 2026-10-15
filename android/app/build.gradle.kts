@@ -82,6 +82,9 @@ dependencies {
     // JSON serialization (matching ReWord vault structure)
     implementation("com.google.code.gson:gson:2.10.1")
 
+    // Image loading for favicons & website icons
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ReWord</string>
     <string name="autofill_service_label">ReWord Autofill</string>
+    <string name="tile_label">ReWord</string>
+    <string name="accessibility_service_label">تعبئة ReWord الذكية</string>
+    <string name="accessibility_service_description">تساعدك خدمة ReWord في ملء بيانات الدخول تلقائياً وإظهار زر الدرع للملء السريع في حقول الدخول دون أن يختفي.</string>
 
     <!-- Connect Screen -->
     <string name="connect_title">ربط الخزينة</string>
@@ -27,6 +30,16 @@
     <string name="autofill_settings_header">الملء التلقائي (Android Autofill)</string>
     <string name="enable_autofill_button">تفعيل ReWord في إعدادات النظام</string>
     <string name="autofill_description">يتيح لـ ReWord ملء أسماء المستخدمين وكلمات المرور في كافة التطبيقات والمتصفحات تلقائياً.</string>
+    
+    <string name="floating_shield_header">درع ReWord العائم (Floating Shield)</string>
+    <string name="floating_shield_desc">ظهور أيقونة درع عائمة أنيقة تتيح لك الوصول الفوري لكلمات المرور ونسخها أو ملئها في أي تطبيق دون أن تختفي فجأة.</string>
+    <string name="floating_shield_enable">تفعيل الدرع العائم</string>
+    <string name="floating_shield_grant_permission">منح إذن الظهور فوق التطبيقات</string>
+
+    <string name="accessibility_header">خدمة الملء الذكي (Accessibility)</string>
+    <string name="accessibility_desc">تتيح للدرع التعرف التلقائي على حقول اسم المستخدم وكلمة المرور في كافة البرامج وملئها بنقرة واحدة.</string>
+    <string name="enable_accessibility">تفعيل في إمكانية الوصول</string>
+
     <string name="biometric_header">الأمان البيومتري</string>
     <string name="enable_biometric">فتح الخزينة ببصمة الإصبع أو الوجه</string>
     <string name="lock_vault">قفل الخزينة</string>

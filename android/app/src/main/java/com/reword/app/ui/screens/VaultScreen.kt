@@ -61,6 +61,7 @@ fun VaultScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .navigationBarsPadding()
                 .padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(10.dp))

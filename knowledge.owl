@@ -2,7 +2,7 @@
 <rdf:RDF xmlns:ol="urn:ontolink:" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export">
     <rdf:type rdf:resource="urn:ontolink:Project" />
-    <ol:revision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">57</ol:revision>
+    <ol:revision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">80</ol:revision>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ReWord 3 - export</ol:title>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/actor-dev">
@@ -31,7 +31,7 @@
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-chrome-extension">
     <rdf:type rdf:resource="urn:ontolink:Artifact" />
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
-    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">893c7665a72cc8bbcd8267285c89c88cea82d8320128e46e3fbb5dc754b56b46</ol:contentHash>
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">f0f21403acc5c6afe59004bc36a747feb3e73d9c499c8be88fa30f84c08b0a52</ol:contentHash>
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T20:33:12.889212+00:00</ol:createdAt>
     <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">extension</ol:kind>
     <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">extension/manifest.json</ol:path>
@@ -76,7 +76,7 @@
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-implementation">
     <rdf:type rdf:resource="urn:ontolink:Artifact" />
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
-    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a2ec7de2054fae4ebdd40db510b2bbc6f26f6bea676be65940b2c43af7632545</ol:contentHash>
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">773a3ff2e81b5a3c98979d12e17495faf5700f3ba895558b37c5b1a7bd534ae1</ol:contentHash>
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.104547+00:00</ol:createdAt>
     <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:kind>
     <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/implementation-report.md</ol:path>
@@ -148,7 +148,7 @@
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/artifact-verification">
     <rdf:type rdf:resource="urn:ontolink:Artifact" />
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
-    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bf3e2885dee8120ac4f3a688d0a866bdb5ec96548db3e8c0db18637325d7692e</ol:contentHash>
+    <ol:contentHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">f078d26fc4335b631fb28fa1e159cdf6a25738c6493a0caeccbecb1ca58fec9b</ol:contentHash>
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:40.659599+00:00</ol:createdAt>
     <ol:kind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">verification</ol:kind>
     <ol:path rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/verification-report.md</ol:path>
@@ -203,6 +203,38 @@
     <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Authenticated encryption, per-record randomness, PBKDF2-SHA256 key derivation (100k iter).</ol:summary>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AES-256-GCM with per-record random salt+IV</ol:title>
   </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-android-cairo-font">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:resource="urn:ontolink:project:reword-3-export/req-arabic-font" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.996998+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bundled variable Cairo TTF font locally in res/font/cairo.ttf and enforced across Material 3 Typography</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Local Cairo Arabic Font Integration</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-android-floating-shield">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:resource="urn:ontolink:project:reword-3-export/req-floating-shield" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.997716+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Implement FloatingShieldService, FloatingPickerActivity, and ReWordAccessibilityService to provide non-dismissing access to credentials</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Persistent Floating Shield and Accessibility Direct Fill</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-android-insets-safearea">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:resource="urn:ontolink:project:reword-3-export/req-safe-area" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.998070+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Apply WindowCompat.setDecorFitsSystemWindows(window, false) with statusBarsPadding() and navigationBarsPadding() across all screens</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Window Insets and Status Bar Safe Area Padding</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-android-rtl-layout">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:resource="urn:ontolink:project:reword-3-export/req-arabic-rtl" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.997354+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Enforce CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) globally with LTR wrappers for credentials and URLs</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Forced RTL Layout Direction with Bilingual Handling</ol:title>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-electron-store">
     <rdf:type rdf:resource="urn:ontolink:Decision" />
     <ol:basis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">req-vault</ol:basis>
@@ -210,6 +242,14 @@
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:57:04.095126+00:00</ol:createdAt>
     <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Simpler deployment, no native binaries. Trade-off: full array load on each read.</ol:summary>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electron-store over SQLite for persistence</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-extension-badge-lifecycle">
+    <rdf:type rdf:resource="urn:ontolink:Decision" />
+    <ol:basis rdf:resource="urn:ontolink:project:reword-3-export/req-extension-badge-fix" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.998425+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Track input field visibility, listen to form submit and button clicks, purge orphan buttons, and run cleanDeadBadges on DOM mutations and URL changes</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Extension Shield Badge Visibility and Destruction Lifecycle</ol:title>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/dec-google-favicon">
     <rdf:type rdf:resource="urn:ontolink:Decision" />
@@ -288,10 +328,10 @@
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:37:42.474262+00:00</ol:createdAt>
     <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
-    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a2ec7de2054fae4ebdd40db510b2bbc6f26f6bea676be65940b2c43af7632545</ol:proofHash>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">773a3ff2e81b5a3c98979d12e17495faf5700f3ba895558b37c5b1a7bd534ae1</ol:proofHash>
     <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/implementation-report.md</ol:proofPath>
     <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
-    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a2ec7de2054fae4ebdd40db510b2bbc6f26f6bea676be65940b2c43af7632545</ol:targetHash>
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">773a3ff2e81b5a3c98979d12e17495faf5700f3ba895558b37c5b1a7bd534ae1</ol:targetHash>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/ev-monitoring">
     <rdf:type rdf:resource="urn:ontolink:Evidence" />
@@ -318,10 +358,10 @@
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T19:41:41.073441+00:00</ol:createdAt>
     <ol:outcome rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PASS</ol:outcome>
-    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bf3e2885dee8120ac4f3a688d0a866bdb5ec96548db3e8c0db18637325d7692e</ol:proofHash>
+    <ol:proofHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">f078d26fc4335b631fb28fa1e159cdf6a25738c6493a0caeccbecb1ca58fec9b</ol:proofHash>
     <ol:proofPath rdf:datatype="http://www.w3.org/2001/XMLSchema#string">.ontolink/verification-report.md</ol:proofPath>
     <ol:supports rdf:resource="urn:ontolink:project:reword-3-export/artifact-verification" />
-    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bf3e2885dee8120ac4f3a688d0a866bdb5ec96548db3e8c0db18637325d7692e</ol:targetHash>
+    <ol:targetHash rdf:datatype="http://www.w3.org/2001/XMLSchema#string">f078d26fc4335b631fb28fa1e159cdf6a25738c6493a0caeccbecb1ca58fec9b</ol:targetHash>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-1">
     <rdf:type rdf:resource="urn:ontolink:Event" />
@@ -701,6 +741,12 @@
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.909875+00:00</ol:createdAt>
   </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-78">
+    <rdf:type rdf:resource="urn:ontolink:Event" />
+    <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">batch-record-android-and-extension-achievements</ol:action>
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:43.142371+00:00</ol:createdAt>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/event-8">
     <rdf:type rdf:resource="urn:ontolink:Event" />
     <ol:action rdf:datatype="http://www.w3.org/2001/XMLSchema#string">record-upsert</ol:action>
@@ -722,6 +768,20 @@
     <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ReWord is a local-first offline password manager for Windows using Electron with AES encryption.</ol:summary>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Desktop password manager - Electron.js</ol:title>
   </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-arabic-font">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.991739+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Support high quality Arabic typography using a local Cairo font bundled in the app.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Local Arabic Cairo Font</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-arabic-rtl">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.992005+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Enforce right-to-left layout globally while preserving left-to-right rendering for technical credentials and URLs.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Forced RTL Directionality with Bilingual Support</ol:title>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-clipboard">
     <rdf:type rdf:resource="urn:ontolink:Requirement" />
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
@@ -729,12 +789,26 @@
     <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">IPC-based clipboard write. No auto-clear yet implemented.</ol:summary>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Clipboard copy for passwords and usernames</ol:title>
   </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-extension-badge-fix">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.992831+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ensure autofill shield badges are immediately destroyed upon login, SPA page transitions, or when input fields are removed from the DOM.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Extension Shield Badge Lifecycle Management</ol:title>
+  </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-favicon">
     <rdf:type rdf:resource="urn:ontolink:Requirement" />
     <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:21.649011+00:00</ol:createdAt>
     <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Main process fetches favicon as base64 when URL is added. Displayed as site icon.</ol:summary>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automatic favicon fetch via Google Favicon API</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-floating-shield">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.992241+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Provide a non-dismissing floating shield and accessibility service so autofill credentials remain accessible at any time.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Persistent Floating Shield &amp; Direct Fill</ol:title>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-import-export">
     <rdf:type rdf:resource="urn:ontolink:Requirement" />
@@ -763,6 +837,13 @@
     <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-14T17:48:22.417466+00:00</ol:createdAt>
     <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Removes all websites, accounts, and master password. Resets to initial state.</ol:summary>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Full vault reset - wipes all data</ol:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-safe-area">
+    <rdf:type rdf:resource="urn:ontolink:Requirement" />
+    <ol:belongsTo rdf:resource="urn:ontolink:project:reword-3-export" />
+    <ol:createdAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-15T11:41:42.992560+00:00</ol:createdAt>
+    <ol:summary rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Add status bar and navigation bar padding to prevent overlapping with phone status icons.</ol:summary>
+    <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Status Bar &amp; System Window Insets</ol:title>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/req-search">
     <rdf:type rdf:resource="urn:ontolink:Requirement" />
@@ -821,9 +902,9 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:build" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">تطوير خدمة الملء التلقائي (AutofillService) للتكامل مع تطبيقات ومواقع أندرويد</ol:title>
-    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-biometrics">
@@ -834,9 +915,9 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:build" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">تكامل التحقق ببصمة الإصبع أو الوجه (BiometricPrompt) مع Android Keystore</ol:title>
-    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-crypto">
@@ -847,9 +928,9 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:build" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">READY</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">برمجة فك وتشفير الخزينة (AES-256-GCM + PBKDF2) ومزامنة Cloudflare Worker</ol:title>
-    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-web-core" />
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-setup">
@@ -872,9 +953,9 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">developer</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:build" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">بناء واجهات الإعداد والمزامنة وإدخال Sync ID وكلمة المرور الرئيسية</ol:title>
-    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-web-ui" />
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-android-verification">
@@ -885,9 +966,9 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">qa</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:verify" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">verification</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">اختبار وتوثيق عمل الملء التلقائي في مختلف تطبيقات ومتصفحات أندرويد</ol:title>
-    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-android-plan" />
+    <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-verification" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
   </rdf:Description>
   <rdf:Description rdf:about="urn:ontolink:project:reword-3-export/task-build">
@@ -898,7 +979,7 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:build" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">implementation</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">READY</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Build project work</ol:title>
     <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-implementation" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
@@ -911,7 +992,7 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:deliver" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">handoff</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">READY</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Deliver project work</ol:title>
     <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-delivery" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>
@@ -975,7 +1056,7 @@
     <ol:owner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coordinator</ol:owner>
     <ol:phase rdf:resource="urn:ontolink:verify" />
     <ol:requiredKind rdf:datatype="http://www.w3.org/2001/XMLSchema#string">verification</ol:requiredKind>
-    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TODO</ol:status>
+    <ol:status rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DONE</ol:status>
     <ol:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Verify project work</ol:title>
     <ol:usesArtifact rdf:resource="urn:ontolink:project:reword-3-export/artifact-verification" />
     <ol:weight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</ol:weight>

@@ -37,6 +37,7 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
         storage = SecureStorage(this)
         syncRepository = SyncRepository(storage)
 
