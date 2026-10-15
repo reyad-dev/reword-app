@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="repo-icon.svg" width="180" alt="ReWord password manager icon" />
+</p>
+
 # 🛡️ ReWord - Secure Zero-Knowledge Password Manager & Autofill Suite
 ### مدير كلمات المرور الآمن والمشفر بمبدأ المعرفة الصفرية (Zero-Knowledge) مع الملء التلقائي (Autofill)
 
