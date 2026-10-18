@@ -46,8 +46,9 @@ jobs:
           path: ReWord.apk
           if-no-files-found: error
 
-      - name: Update GitHub Release v1.2.0 Asset
+      - name: Update GitHub Release v1.2.1 Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload v1.2.0 ReWord.apk --clobber || true
+          gh release upload v1.2.1 ReWord.apk --clobber || true
+

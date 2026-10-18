@@ -129,7 +129,7 @@ open-source
     "priceCurrency": "USD"
   },
   "description": "Zero-Knowledge self-hosted password manager & system autofill suite powered by Cloudflare and client-side AES-256-GCM encryption.",
-  "softwareVersion": "1.2.0",
+  "softwareVersion": "1.2.1",
   "featureList": [
     "Zero-Knowledge AES-256-GCM & PBKDF2 encryption",
     "Chrome Extension Manifest V3 Autofill",
@@ -159,7 +159,7 @@ open-source
    * `awesome-cloudflare` (ضمن قسم Workers & Pages Projects).
    * `awesome-privacy` و `awesome-security`.
 2. **إنشاء Release رسمي على GitHub:**
-   * نشر إصدار جديد بعنوان `v1.2.0 - Android System Autofill, Chrome Extension & Multi-Browser CSV Import`.
+   * نشر إصدار جديد بعنوان `v1.2.1 - Smart Autofill Precision, Cloudflare Deployment & Multi-Browser CSV Import`.
    * إرفاق ملف `ReWord.apk` في قسم Assets بالـ Release، مما يرفع تصنيف المستودع في محرك بحث Google عند البحث عن `reword apk` أو `download reword password manager`.
 3. **مشاركة المشروع في المجتمعات التقنية:**
    * مجتمعات التقنية العربية (حسوب I/O، ريديت r/arab_pros أو تقنية، تيليغرام).
