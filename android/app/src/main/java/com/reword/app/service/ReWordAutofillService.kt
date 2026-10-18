@@ -49,7 +49,10 @@ class ReWordAutofillService : AutofillService() {
 
         // Parse view hierarchy
         val parsed = parseStructure(structure)
-        if (parsed.passwordFields.isEmpty() && parsed.usernameFields.isEmpty()) {
+        val targetUser = parsed.usernameFields.firstOrNull() ?: parsed.allEditableFields.firstOrNull()
+        val targetPass = parsed.passwordFields.firstOrNull() ?: parsed.allEditableFields.getOrNull(1)
+
+        if (targetUser == null && targetPass == null) {
             callback.onSuccess(null)
             return
         }
@@ -59,14 +62,14 @@ class ReWordAutofillService : AutofillService() {
 
         // If vault is locked, prompt user to unlock via Biometric Authentication
         if (activeVault == null) {
-            val response = buildAuthResponse(parsed, storage)
+            val response = buildAuthResponse(parsed, storage, request)
             callback.onSuccess(response)
             return
         }
 
         // Vault is unlocked: find matching site & accounts
         val matchingSites = findMatchingSites(activeVault, parsed.webDomain, parsed.packageName)
-        val candidateSites = if (matchingSites.isNotEmpty()) matchingSites else activeVault.sites.take(5)
+        val candidateSites = if (matchingSites.isNotEmpty()) matchingSites else activeVault.sites.take(10)
 
         if (candidateSites.isEmpty()) {
             callback.onSuccess(null)
@@ -74,13 +77,10 @@ class ReWordAutofillService : AutofillService() {
         }
 
         val responseBuilder = FillResponse.Builder()
-        val usernameId = parsed.usernameFields.firstOrNull()
-        val passwordId = parsed.passwordFields.firstOrNull()
-
         var hasDatasets = false
         for (site in candidateSites) {
             for (acc in site.accounts.take(3)) {
-                val dataset = buildDataset(site, acc, usernameId, passwordId)
+                val dataset = buildDataset(site, acc, targetUser, targetPass, request)
                 if (dataset != null) {
                     responseBuilder.addDataset(dataset)
                     hasDatasets = true
@@ -89,9 +89,10 @@ class ReWordAutofillService : AutofillService() {
         }
 
         // Enable save prompt if password field exists
-        if (passwordId != null) {
-            val saveIds = mutableListOf<AutofillId>(passwordId)
-            usernameId?.let { saveIds.add(it) }
+        val saveIds = mutableListOf<AutofillId>()
+        targetPass?.let { saveIds.add(it) }
+        targetUser?.let { saveIds.add(it) }
+        if (saveIds.isNotEmpty()) {
             val saveInfo = SaveInfo.Builder(
                 SaveInfo.SAVE_DATA_TYPE_PASSWORD or SaveInfo.SAVE_DATA_TYPE_USERNAME,
                 saveIds.toTypedArray()
@@ -115,7 +116,8 @@ class ReWordAutofillService : AutofillService() {
         site: Site,
         acc: Account,
         usernameId: AutofillId?,
-        passwordId: AutofillId?
+        passwordId: AutofillId?,
+        request: FillRequest
     ): Dataset? {
         if (usernameId == null && passwordId == null) return null
 
@@ -124,28 +126,81 @@ class ReWordAutofillService : AutofillService() {
             setTextViewText(R.id.autofill_subtitle, acc.user.ifBlank { "••••••••" })
         }
 
+        val inlinePresentation = createInlinePresentation(
+            request,
+            site.name.ifBlank { site.url },
+            acc.user.ifBlank { "حساب ReWord" }
+        )
+
         val builder = Dataset.Builder(presentation)
-        usernameId?.let {
-            builder.setValue(it, AutofillValue.forText(acc.user), presentation)
-        }
-        passwordId?.let {
-            builder.setValue(it, AutofillValue.forText(acc.pass), presentation)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && inlinePresentation != null) {
+            builder.setInlinePresentation(inlinePresentation)
+            usernameId?.let {
+                builder.setValue(it, AutofillValue.forText(acc.user), presentation, inlinePresentation)
+            }
+            passwordId?.let {
+                builder.setValue(it, AutofillValue.forText(acc.pass), presentation, inlinePresentation)
+            }
+        } else {
+            usernameId?.let {
+                builder.setValue(it, AutofillValue.forText(acc.user), presentation)
+            }
+            passwordId?.let {
+                builder.setValue(it, AutofillValue.forText(acc.pass), presentation)
+            }
         }
 
         return builder.build()
     }
 
+    private fun createInlinePresentation(
+        request: FillRequest,
+        title: String,
+        subtitle: String
+    ): android.service.autofill.InlinePresentation? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
+        val inlineRequest = request.inlineSuggestionsRequest ?: return null
+        val spec = inlineRequest.inlinePresentationSpecs.firstOrNull() ?: return null
+
+        return try {
+            val emptyIntent = Intent()
+            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+            val pendingIntent = PendingIntent.getActivity(this, 0, emptyIntent, flags)
+
+            val slice = androidx.autofill.inline.v1.InlineSuggestionUi.newContentBuilder(pendingIntent)
+                .setContentDescription("$title - $subtitle")
+                .setTitle(title)
+                .setSubtitle(subtitle)
+                .build()
+                .slice
+            android.service.autofill.InlinePresentation(slice, spec, false)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     /**
      * Builds response that triggers Biometric Auth before revealing credentials.
      */
-    private fun buildAuthResponse(parsed: ParsedStructure, storage: SecureStorage): FillResponse? {
-        val targetId = parsed.passwordFields.firstOrNull() ?: parsed.usernameFields.firstOrNull() ?: return null
+    private fun buildAuthResponse(
+        parsed: ParsedStructure,
+        storage: SecureStorage,
+        request: FillRequest
+    ): FillResponse? {
+        val targetIds = mutableListOf<AutofillId>()
+        parsed.usernameFields.firstOrNull()?.let { targetIds.add(it) }
+        parsed.passwordFields.firstOrNull()?.let { targetIds.add(it) }
+        if (targetIds.isEmpty()) {
+            parsed.allEditableFields.firstOrNull()?.let { targetIds.add(it) }
+        }
+        if (targetIds.isEmpty()) return null
 
         val intent = Intent(this, AutofillAuthActivity::class.java).apply {
             putExtra(AutofillAuthActivity.EXTRA_DOMAIN, parsed.webDomain)
             putExtra(AutofillAuthActivity.EXTRA_PACKAGE, parsed.packageName)
-            putExtra(AutofillAuthActivity.EXTRA_USER_FIELD, parsed.usernameFields.firstOrNull())
-            putExtra(AutofillAuthActivity.EXTRA_PASS_FIELD, parsed.passwordFields.firstOrNull())
+            putExtra(AutofillAuthActivity.EXTRA_USER_FIELD, parsed.usernameFields.firstOrNull() ?: parsed.allEditableFields.firstOrNull())
+            putExtra(AutofillAuthActivity.EXTRA_PASS_FIELD, parsed.passwordFields.firstOrNull() ?: parsed.allEditableFields.getOrNull(1))
         }
 
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -162,9 +217,20 @@ class ReWordAutofillService : AutofillService() {
             setTextViewText(R.id.autofill_subtitle, "اضغط للمصادقة بالبصمة للملء التلقائي")
         }
 
-        return FillResponse.Builder()
-            .setAuthentication(arrayOf(targetId), intentSender, presentation)
-            .build()
+        val responseBuilder = FillResponse.Builder()
+        val inlinePresentation = createInlinePresentation(
+            request,
+            "إلغاء قفل ReWord",
+            "المصادقة للملء التلقائي"
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && inlinePresentation != null) {
+            responseBuilder.setAuthentication(targetIds.toTypedArray(), intentSender, presentation, inlinePresentation)
+        } else {
+            responseBuilder.setAuthentication(targetIds.toTypedArray(), intentSender, presentation)
+        }
+
+        return responseBuilder.build()
     }
 
     private fun findMatchingSites(vault: Vault, webDomain: String?, packageName: String?): List<Site> {
@@ -179,7 +245,7 @@ class ReWordAutofillService : AutofillService() {
                 // Direct domain match (e.g. twitter.com)
                 cleanDomain != null && siteHost.isNotEmpty() && (cleanDomain.contains(siteHost) || siteHost.contains(cleanDomain)) -> true
                 // Package name matching (e.g. com.twitter.android contains "twitter")
-                pkg != null && siteName.isNotEmpty() && pkg.contains(siteName) -> true
+                pkg != null && siteName.isNotEmpty() && (pkg.contains(siteName) || siteName.contains(pkg)) -> true
                 pkg != null && siteHost.isNotEmpty() && pkg.contains(siteHost.split(".").firstOrNull() ?: "") -> true
                 else -> false
             }
@@ -200,17 +266,38 @@ class ReWordAutofillService : AutofillService() {
         var packageName: String? = null,
         var webDomain: String? = null,
         val usernameFields: MutableList<AutofillId> = mutableListOf(),
-        val passwordFields: MutableList<AutofillId> = mutableListOf()
+        val passwordFields: MutableList<AutofillId> = mutableListOf(),
+        val allEditableFields: MutableList<AutofillId> = mutableListOf()
     )
 
     private fun parseStructure(structure: AssistStructure): ParsedStructure {
         val parsed = ParsedStructure()
-        parsed.packageName = structure.activityComponent.packageName
+        parsed.packageName = structure.activityComponent?.packageName
 
         for (i in 0 until structure.windowNodeCount) {
             val node = structure.getWindowNodeAt(i).rootViewNode
             traverseNode(node, parsed)
         }
+
+        // Heuristic fallback:
+        // If password is found, but username wasn't explicitly labeled:
+        // Any editable field before the password is the username/email field!
+        if (parsed.passwordFields.isNotEmpty() && parsed.usernameFields.isEmpty()) {
+            val firstPasswordId = parsed.passwordFields.first()
+            val passIndex = parsed.allEditableFields.indexOf(firstPasswordId)
+            if (passIndex > 0) {
+                parsed.usernameFields.add(parsed.allEditableFields[passIndex - 1])
+            } else if (parsed.allEditableFields.size > 1) {
+                val nonPass = parsed.allEditableFields.firstOrNull { it != firstPasswordId }
+                if (nonPass != null) parsed.usernameFields.add(nonPass)
+            }
+        }
+
+        // If only 1 editable field on the screen and neither was flagged:
+        if (parsed.usernameFields.isEmpty() && parsed.passwordFields.isEmpty() && parsed.allEditableFields.isNotEmpty()) {
+            parsed.usernameFields.add(parsed.allEditableFields.first())
+        }
+
         return parsed
     }
 
@@ -220,29 +307,69 @@ class ReWordAutofillService : AutofillService() {
             if (parsed.webDomain == null) parsed.webDomain = it
         }
 
-        val hints = node.autofillHints
-        val idEntry = node.idEntry?.lowercase() ?: ""
-        val hintText = node.hint?.toString()?.lowercase() ?: ""
+        val autofillId = node.autofillId
+        val hints = node.autofillHints?.map { it.lowercase() } ?: emptyList()
+        val idEntry = node.idEntry?.lowercase().orEmpty()
+        val hintText = (node.hint?.toString() ?: "").lowercase()
+        val text = (node.text?.toString() ?: "").lowercase()
+        val contentDesc = (node.contentDescription?.toString() ?: "").lowercase()
+        val className = node.className.orEmpty()
         val inputType = node.inputType
 
-        val isPasswordType = (inputType and InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0 ||
-                (inputType and InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) != 0 ||
-                (inputType and InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD) != 0
+        val combinedText = "$idEntry $hintText $text $contentDesc"
 
-        val hasPasswordHint = hints?.contains(View.AUTOFILL_HINT_PASSWORD) == true ||
-                idEntry.contains("password") || idEntry.contains("pass") ||
-                hintText.contains("password") || hintText.contains("كلمة المرور")
+        val isEditable = (autofillId != null) && (
+            className.contains("EditText", ignoreCase = true) ||
+            className.contains("TextInput", ignoreCase = true) ||
+            (inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT ||
+            node.isFocused
+        )
 
-        val hasUsernameHint = hints?.contains(View.AUTOFILL_HINT_USERNAME) == true ||
-                hints?.contains(View.AUTOFILL_HINT_EMAIL_ADDRESS) == true ||
-                idEntry.contains("user") || idEntry.contains("email") || idEntry.contains("login") ||
-                hintText.contains("user") || hintText.contains("email") || hintText.contains("اسم المستخدم")
+        if (isEditable && autofillId != null) {
+            if (!parsed.allEditableFields.contains(autofillId)) {
+                parsed.allEditableFields.add(autofillId)
+            }
+        }
 
-        node.autofillId?.let { autofillId ->
-            if (isPasswordType || hasPasswordHint) {
-                parsed.passwordFields.add(autofillId)
-            } else if (hasUsernameHint) {
-                parsed.usernameFields.add(autofillId)
+        // Password detection
+        val isPasswordClass = (inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT
+        val isPasswordVariation = (inputType and InputType.TYPE_MASK_VARIATION) in listOf(
+            InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
+            InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD
+        )
+        val isNumericPassword = (inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_NUMBER &&
+            (inputType and InputType.TYPE_MASK_VARIATION) == InputType.TYPE_NUMBER_VARIATION_PASSWORD
+
+        val hasPasswordHint = hints.any { it.contains("password") } ||
+            listOf("password", "pass", "pwd", "pin", "مرور", "السر", "سر").any { combinedText.contains(it) }
+
+        val isPassword = (isPasswordClass && isPasswordVariation) || isNumericPassword || hasPasswordHint
+
+        // Username / Email detection
+        val isEmailVariation = (inputType and InputType.TYPE_MASK_VARIATION) in listOf(
+            InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+            InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
+        )
+        val isPersonNameVariation = (inputType and InputType.TYPE_MASK_VARIATION) == InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+
+        val hasUsernameHint = hints.any { it.contains("user") || it.contains("email") || it.contains("login") } ||
+            listOf(
+                "user", "username", "email", "mail", "login", "account", "phone",
+                "مستخدم", "اسم المستخدم", "بريد", "إلكتروني", "الكتروني", "حساب", "تسجيل", "هاتف", "جوال"
+            ).any { combinedText.contains(it) }
+
+        val isUsername = isEmailVariation || isPersonNameVariation || hasUsernameHint
+
+        if (autofillId != null) {
+            if (isPassword) {
+                if (!parsed.passwordFields.contains(autofillId)) {
+                    parsed.passwordFields.add(autofillId)
+                }
+            } else if (isUsername) {
+                if (!parsed.usernameFields.contains(autofillId)) {
+                    parsed.usernameFields.add(autofillId)
+                }
             }
         }
 

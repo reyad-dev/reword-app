@@ -156,19 +156,44 @@ function renderCurrentSiteMatches(matches) {
 
   if (!matches || matches.length === 0) {
     currentSiteMatches.innerHTML = `
-      <div style="font-size:11px;color:#94a3b8;padding:4px 0;">
-        لا توجد حسابات محفوظة لـ <strong>${CURRENT_DOMAIN}</strong>
+      <div class="no-match-box">
+        <div style="font-size:11px;color:#94a3b8;padding:4px 0;">
+          لا توجد حسابات مسجلة لـ <strong>${CURRENT_DOMAIN}</strong>
+        </div>
+        <button type="button" class="btn-quick-add" id="btn-quick-add-cur">+ إضافة حساب لـ ${CURRENT_DOMAIN}</button>
       </div>
     `;
+    const qBtn = currentSiteMatches.querySelector('#btn-quick-add-cur');
+    if (qBtn) {
+      qBtn.addEventListener('click', () => {
+        document.getElementById('add-site-name').value = CURRENT_DOMAIN && CURRENT_DOMAIN !== '-' ? CURRENT_DOMAIN : '';
+        document.getElementById('add-site-url').value = CURRENT_TAB?.url || '';
+        document.getElementById('modal-title').textContent = 'إضافة حساب جديد';
+        modalAdd.classList.add('active');
+        document.getElementById('add-site-user').focus();
+      });
+    }
     return;
   }
 
   matches.forEach((acc) => {
     const card = document.createElement('div');
     card.className = 'match-card';
+    const firstUrl = acc.siteUrl || (CURRENT_DOMAIN && CURRENT_DOMAIN !== '-' ? 'https://' + CURRENT_DOMAIN : '');
+    const fav = firstUrl ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(firstUrl)}&sz=64` : '';
+    const initial = (acc.siteName || acc.user || CURRENT_DOMAIN || 'W').charAt(0).toUpperCase();
 
     card.innerHTML = `
-      <div class="match-user" title="${acc.user}">${acc.user}</div>
+      <div class="match-left">
+        <div class="site-fav-box">
+          ${fav ? `<img src="${fav}" class="site-fav-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="">` : ''}
+          <span class="site-fav-fallback" style="${fav ? 'display:none;' : 'display:flex;'}">${initial}</span>
+        </div>
+        <div class="match-user-meta">
+          <div class="match-user" title="${acc.user}">${acc.user}</div>
+          <div class="match-sub">${acc.siteName || CURRENT_DOMAIN}</div>
+        </div>
+      </div>
       <div class="match-actions">
         <button class="btn-fill" data-user="${acc.user}" title="ملء تلقائي للصفحة">تعبئة ⚡</button>
         <button class="mini-btn btn-copy-user" title="نسخ اسم المستخدم">👤</button>
@@ -225,10 +250,23 @@ function renderAllSites() {
       const siteItem = document.createElement('div');
       siteItem.className = 'vault-site-item';
 
+      const firstUrl = site.url ? site.url.split(/[,;\s]+/)[0].trim() : '';
+      const fav = firstUrl ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(firstUrl)}&sz=64` : '';
+      const initial = (site.name || 'W').charAt(0).toUpperCase();
       const accountsCount = site.accounts?.length || 0;
+
       siteItem.innerHTML = `
         <div class="site-name-row">
-          <span>${site.name || 'موقع بدون اسم'}</span>
+          <div class="site-row-left">
+            <div class="site-fav-box">
+              ${fav ? `<img src="${fav}" class="site-fav-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="">` : ''}
+              <span class="site-fav-fallback" style="${fav ? 'display:none;' : 'display:flex;'}">${initial}</span>
+            </div>
+            <div class="site-meta">
+              <span class="site-title">${site.name || 'موقع بدون اسم'}</span>
+              ${firstUrl ? `<span class="site-url-sub">${firstUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '')}</span>` : ''}
+            </div>
+          </div>
           <span class="site-acc-count">${accountsCount} حساب ▾</span>
         </div>
         <div class="site-accounts-container" style="display:none;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);">

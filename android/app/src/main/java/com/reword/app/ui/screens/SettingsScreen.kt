@@ -26,9 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.reword.app.service.FloatingPickerActivity
-import com.reword.app.service.FloatingShieldService
-import com.reword.app.service.ReWordAccessibilityService
 import com.reword.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,22 +48,6 @@ fun SettingsScreen(
         } else {
             false
         }
-    }
-
-    var isFloatingShieldActive by remember {
-        mutableStateOf(FloatingShieldService.isRunning)
-    }
-
-    val hasOverlayPermission = remember {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(context)
-        } else {
-            true
-        }
-    }
-
-    val isAccessibilityActive = remember {
-        ReWordAccessibilityService.isRunning()
     }
 
     Scaffold(
@@ -92,9 +73,9 @@ fun SettingsScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // ── Section 1: Floating Shield (User Requested) ──
+            // ── Section 1: Android System Autofill & Gboard (Primary / Recommended) ──
             Text(
-                text = "درع ReWord العائم (Floating Shield)",
+                text = "الملء التلقائي للنظام ولوحة المفاتيح (موصى به)",
                 style = MaterialTheme.typography.titleMedium,
                 color = AccentCyan,
                 fontWeight = FontWeight.Bold
@@ -105,128 +86,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
-                    .border(1.dp, BorderDark, RoundedCornerShape(14.dp)),
-                colors = CardDefaults.cardColors(containerColor = SurfaceCard)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                            Icon(
-                                imageVector = Icons.Default.Shield,
-                                contentDescription = null,
-                                tint = AccentCyan,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column {
-                                Text(
-                                    text = "تفعيل زر الدرع العائم",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = TextPrimary
-                                )
-                                Text(
-                                    text = "زر درع دائم يظهر على حافة الشاشة مثل إضافة المتصفح",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = TextSecondary
-                                )
-                            }
-                        }
-
-                        Switch(
-                            checked = isFloatingShieldActive,
-                            onCheckedChange = { enable ->
-                                if (enable) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-                                        val intent = Intent(
-                                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                            Uri.parse("package:${context.packageName}")
-                                        ).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-                                        context.startActivity(intent)
-                                        Toast.makeText(context, "يرجى منح إذن الظهور فوق التطبيقات أولاً", Toast.LENGTH_LONG).show()
-                                    } else {
-                                        FloatingShieldService.start(context)
-                                        isFloatingShieldActive = true
-                                    }
-                                } else {
-                                    FloatingShieldService.stop(context)
-                                    isFloatingShieldActive = false
-                                }
-                            },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
-                                checkedTrackColor = PrimaryViolet,
-                                uncheckedTrackColor = SurfaceDark
-                            )
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "يحل مشكلة اختفاء نافذة الملء التلقائي بسرعة؛ يمنحك أيقونة درع ReWord دائماً عند الكتابة للوصول الفوري لكافة حساباتك وكلمات المرور بلمسة واحدة دون أن تختفي.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (!hasOverlayPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            OutlinedButton(
-                                onClick = {
-                                    val intent = Intent(
-                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                        Uri.parse("package:${context.packageName}")
-                                    ).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier.weight(1f),
-                                shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(1.dp, WarningAmber)
-                            ) {
-                                Text("منح إذن الظهور", color = WarningAmber, style = MaterialTheme.typography.labelMedium)
-                            }
-                        }
-
-                        Button(
-                            onClick = {
-                                val intent = Intent(context, FloatingPickerActivity::class.java).apply {
-                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                }
-                                context.startActivity(intent)
-                            },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryViolet)
-                        ) {
-                            Icon(Icons.Default.Launch, contentDescription = null, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("تجربة نافذة الدرع الآن")
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // ── Section 2: Android Autofill ──
-            Text(
-                text = "الملء التلقائي للنظام (System Autofill)",
-                style = MaterialTheme.typography.titleMedium,
-                color = AccentCyan,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .border(1.dp, BorderDark, RoundedCornerShape(14.dp)),
+                    .border(1.dp, if (isAutofillEnabled) PrimaryViolet.copy(alpha = 0.5f) else BorderDark, RoundedCornerShape(14.dp)),
                 colors = CardDefaults.cardColors(containerColor = SurfaceCard)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -239,7 +99,7 @@ fun SettingsScreen(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = if (isAutofillEnabled) "الملء التلقائي مفعل لـ ReWord ✓" else "خدمة الملء التلقائي غير مفعلة",
+                            text = if (isAutofillEnabled) "الملء التلقائي للنظام مفعل ✓" else "خدمة الملء التلقائي غير مفعلة",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold,
                             color = TextPrimary
@@ -247,77 +107,20 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "يتيح لـ ReWord تقديم اقتراحات تسجيل الدخول في كافة التطبيقات والمتصفحات.",
+                        text = "يعرض اقتراحات الحسابات تلقائياً بجانب حقول اسم المستخدم وكلمة المرور في المتصفحات والتطبيقات، أو في شريط الاقتراحات أعلى لوحة مفاتيح جوجل (Gboard) دون الحاجة لأي أيقونة عائمة.",
                         style = MaterialTheme.typography.bodySmall,
                         color = TextSecondary
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    OutlinedButton(
+                    Button(
                         onClick = { openAutofillSettings(context) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(1.dp, AccentCyan)
+                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryViolet)
                     ) {
-                        Icon(Icons.Default.SettingsSuggest, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.SettingsSuggest, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("إعدادات الملء التلقائي بالنظام", color = AccentCyan)
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // ── Section 3: Accessibility Smart Fill ──
-            Text(
-                text = "خدمة إمكانية الوصول للتعبئة المباشرة",
-                style = MaterialTheme.typography.titleMedium,
-                color = AccentCyan,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .border(1.dp, BorderDark, RoundedCornerShape(14.dp)),
-                colors = CardDefaults.cardColors(containerColor = SurfaceCard)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = if (isAccessibilityActive) Icons.Default.CheckCircle else Icons.Default.Accessibility,
-                            contentDescription = null,
-                            tint = if (isAccessibilityActive) SuccessEmerald else TextSecondary,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            text = if (isAccessibilityActive) "خدمة الوصول مفعلة ✓" else "تعبئة الحقول بنقرة واحدة",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextPrimary
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "تمكن نافذة الدرع من حقن اسم المستخدم وكلمة المرور مباشرة في حقول الإدخال النشطة.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    OutlinedButton(
-                        onClick = {
-                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-                            context.startActivity(intent)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(1.dp, BorderDark)
-                    ) {
-                        Text("فتح إعدادات إمكانية الوصول (Accessibility)", color = TextPrimary)
+                        Text(if (isAutofillEnabled) "تغيير إعدادات الملء التلقائي" else "تفعيل ReWord كخدمة الملء التلقائي", color = Color.White)
                     }
                 }
             }

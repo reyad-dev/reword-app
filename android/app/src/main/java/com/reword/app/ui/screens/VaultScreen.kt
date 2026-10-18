@@ -1,13 +1,18 @@
 package com.reword.app.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,18 +33,35 @@ fun VaultScreen(
     onSettingsClick: () -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    var selectedTag by remember { mutableStateOf<String?>(null) }
 
-    val filteredSites = remember(vault, searchQuery) {
-        if (searchQuery.isBlank()) {
-            vault.sites
-        } else {
-            val q = searchQuery.trim().lowercase()
-            vault.sites.filter { site ->
-                site.name.lowercase().contains(q) ||
-                        site.url.lowercase().contains(q) ||
-                        site.accounts.any { it.user.lowercase().contains(q) }
+    val allTags = remember(vault.sites) {
+        vault.sites
+            .flatMap { site ->
+                site.tags?.split(",")?.map { it.trim() }?.filter { it.isNotBlank() } ?: emptyList()
+            }
+            .distinct()
+            .sorted()
+    }
+
+    val filteredSites = remember(vault, searchQuery, selectedTag) {
+        var list = vault.sites
+        if (!selectedTag.isNullOrBlank()) {
+            val tagLower = selectedTag!!.lowercase()
+            list = list.filter { site ->
+                site.tags?.split(",")?.any { it.trim().equals(tagLower, ignoreCase = true) } == true
             }
         }
+        if (searchQuery.isNotBlank()) {
+            val q = searchQuery.trim().lowercase()
+            list = list.filter { site ->
+                site.name.lowercase().contains(q) ||
+                        site.url.lowercase().contains(q) ||
+                        site.accounts.any { it.user.lowercase().contains(q) } ||
+                        (site.tags?.lowercase()?.contains(q) == true)
+            }
+        }
+        list
     }
 
     val totalAccounts = remember(vault) {
@@ -91,6 +113,62 @@ fun VaultScreen(
                     unfocusedContainerColor = SurfaceCard
                 )
             )
+
+            // Groups (Tags) Filter Chips
+            if (allTags.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(10.dp))
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        val isAllSelected = selectedTag == null
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(if (isAllSelected) PrimaryViolet else SurfaceCard)
+                                .border(
+                                    1.dp,
+                                    if (isAllSelected) PrimaryViolet else BorderDark,
+                                    RoundedCornerShape(20.dp)
+                                )
+                                .clickable { selectedTag = null }
+                                .padding(horizontal = 14.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = "الكل",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (isAllSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isAllSelected) Color.White else TextSecondary
+                            )
+                        }
+                    }
+                    items(allTags) { tag ->
+                        val isSelected = selectedTag.equals(tag, ignoreCase = true)
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(if (isSelected) PrimaryViolet else SurfaceCard)
+                                .border(
+                                    1.dp,
+                                    if (isSelected) PrimaryViolet else BorderDark,
+                                    RoundedCornerShape(20.dp)
+                                )
+                                .clickable {
+                                    selectedTag = if (isSelected) null else tag
+                                }
+                                .padding(horizontal = 14.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = tag,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) Color.White else TextSecondary
+                            )
+                        }
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(14.dp))
 

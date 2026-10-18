@@ -177,3 +177,75 @@
 .reword-filled-success {
   animation: rewordFieldSuccess 1.5s ease-out !important;
 }
+
+/* Dropdown Search & Enhanced Actions */
+.reword-empty-notice {
+  padding: 8px 12px !important;
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  text-align: center !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.reword-dropdown-search-wrap {
+  padding: 8px 10px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #18181b !important;
+}
+
+.reword-search-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: #27272a !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  outline: none !important;
+  direction: rtl !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+.reword-search-input:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3) !important;
+}
+
+.reword-search-results {
+  max-height: 180px !important;
+  overflow-y: auto !important;
+}
+
+.reword-dropdown-footer {
+  padding: 6px 10px !important;
+  background: #18181b !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  text-align: center !important;
+}
+
+.reword-btn-quick-save {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: rgba(139, 92, 246, 0.15) !important;
+  border: 1px solid rgba(139, 92, 246, 0.35) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  color: #c4b5fd !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.reword-btn-quick-save:hover {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+.reword-fav-img {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 4px !important;
+  object-fit: contain !important;
+}

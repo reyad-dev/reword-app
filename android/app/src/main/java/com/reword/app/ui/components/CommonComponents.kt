@@ -261,11 +261,38 @@ fun SiteCard(site: Site) {
                             // Ensure URL text direction is LTR so domains read naturally
                             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                                 Text(
-                                    text = site.url,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = TextMuted,
-                                    maxLines = 1
+                                     text = site.url,
+                                     style = MaterialTheme.typography.bodySmall,
+                                     color = TextMuted,
+                                     maxLines = 1
                                 )
+                            }
+                        }
+                        val tagList = remember(site.tags) {
+                            site.tags?.split(",")?.map { it.trim() }?.filter { it.isNotBlank() } ?: emptyList()
+                        }
+                        if (tagList.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                tagList.take(3).forEach { tag ->
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(PrimaryViolet.copy(alpha = 0.15f))
+                                            .border(0.5.dp, PrimaryViolet.copy(alpha = 0.35f), RoundedCornerShape(6.dp))
+                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(
+                                            text = tag,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = AccentCyan,
+                                            fontSize = 10.sp
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

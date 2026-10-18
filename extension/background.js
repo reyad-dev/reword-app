@@ -246,6 +246,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           const targetDomain = extractDomain(url);
           const matches = [];
+          const allAccounts = [];
 
           for (const site of session.vault.sites || []) {
             const siteDomain = extractDomain(site.url || site.name);
@@ -257,9 +258,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                site.name.toLowerCase().includes(targetDomain) ||
                targetDomain.includes(site.name.toLowerCase()));
 
-            if (matchesDomain && Array.isArray(site.accounts)) {
+            if (Array.isArray(site.accounts)) {
               for (const acc of site.accounts) {
-                matches.push({
+                const item = {
                   siteId: site.id,
                   siteName: site.name,
                   siteUrl: site.url,
@@ -267,12 +268,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                   user: acc.user,
                   pass: acc.pass,
                   notes: acc.notes || ''
-                });
+                };
+                allAccounts.push(item);
+                if (matchesDomain) {
+                  matches.push(item);
+                }
               }
             }
           }
 
-          sendResponse({ isLocked: false, domain: targetDomain, matches });
+          sendResponse({ isLocked: false, domain: targetDomain, matches, allAccounts });
           break;
         }
 

@@ -1,10 +1,11 @@
-const CACHE_NAME = 'reword-v12';
+const CACHE_NAME = 'reword-v13';
 const ASSETS = [
   './index.html',
-  './style.css?v=9',
-  './core.js?v=2',
-  './ui.js?v=6',
-  './manifest.json'
+  './style.css?v=13',
+  './core.js?v=4',
+  './ui.js?v=8',
+  './manifest.json',
+  './repo-icon.svg?v=2'
 ];
 
 self.addEventListener('install', e => {
@@ -29,10 +30,20 @@ self.addEventListener('fetch', e => {
     return;
   }
 
+  // استراتيجية Network-First مع حفظ الكاش: جلب أحدث نسخة دائماً عند وجود إنترنت، والرجوع للكاش عند انقطاع الاتصال
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      return cached || fetch(e.request).catch(() => {
-        // أرجع index.html فقط لطلبات الصفحات والـ HTML المحلية عند انقطاع الإنترنت
+    fetch(e.request).then(response => {
+      if (response && response.status === 200 && response.type === 'basic') {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(e.request, responseClone);
+        });
+      }
+      return response;
+    }).catch(() => {
+      // عند انقطاع الإنترنت، يتم الاسترجاع من الكاش
+      return caches.match(e.request).then(cached => {
+        if (cached) return cached;
         if (e.request.mode === 'navigate' || e.request.headers.get('accept')?.includes('text/html')) {
           return caches.match('./index.html');
         }
@@ -40,4 +51,3 @@ self.addEventListener('fetch', e => {
     })
   );
 });
-

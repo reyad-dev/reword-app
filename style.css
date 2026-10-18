@@ -525,7 +525,8 @@ textarea.field:focus {
 
 .header-actions {
   display: flex;
-  gap: 8px
+  align-items: center;
+  gap: 10px
 }
 
 /* ── SEARCH ── */
@@ -753,30 +754,32 @@ textarea.field:focus {
 
 /* ── VIEW TOGGLE ── */
 .view-toggle {
-  display: flex;
+  display: inline-flex;
+  align-items: center;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  gap: 0
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px
 }
 
 .view-btn {
-  background: none;
+  background: transparent;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 7px;
   cursor: pointer;
   color: var(--text3);
-  transition: var(--tr)
+  transition: all 0.15s ease
 }
 
 .view-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   fill: currentColor
 }
 
@@ -787,7 +790,8 @@ textarea.field:focus {
 
 .view-btn.active {
   background: var(--accent);
-  color: #fff
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3)
 }
 
 .site-card {

@@ -140,7 +140,20 @@ function filterAndRenderList() {
   renderList(filtered);
 }
 
+function updateHeaderStats() {
+  const el = document.getElementById('hdr-stats');
+  if (!el) return;
+  if (!VAULT || !Array.isArray(VAULT.sites)) {
+    el.textContent = '0 موقع • 0 حساب';
+    return;
+  }
+  const s = VAULT.sites.length;
+  const a = VAULT.sites.reduce((acc, site) => acc + (Array.isArray(site.accounts) ? site.accounts.length : 0), 0);
+  el.textContent = `${s} موقع • ${a} حساب`;
+}
+
 function renderList(sites) {
+  updateHeaderStats();
   if (!sites) {
     renderTagsBar();
     filterAndRenderList();

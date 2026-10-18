@@ -99,14 +99,15 @@ function saveSyncSettings(sid,wurl){
 async function saveVault(){
   const enc=await CV.enc(VAULT,MP);
   await DB.set('vault',enc);
-  const s=VAULT.sites.length,a=VAULT.sites.reduce((x,w)=>x+w.accounts.length,0);
-  document.getElementById('hdr-stats').textContent=`${s} موقع • ${a} حساب`;
+  if(typeof updateHeaderStats==='function')updateHeaderStats();
   syncPush(enc); // non-blocking background sync
 }
 
 /* ── INIT ── */
 async function init(){
-  if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  if('serviceWorker'in navigator){
+    navigator.serviceWorker.register('./sw.js').then(r=>{r.update().catch(()=>{});}).catch(()=>{});
+  }
   await DB.open();
   const enc=await DB.get('vault'),meta=await DB.get('meta');
   loadSyncSettings();
@@ -262,7 +263,7 @@ async function doLogin(){
   finally{btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>فتح الخزينة';btn.disabled=false;}
 }
 
-function doLock(){MP=null;VAULT=null;CUR_SITE=null;document.getElementById('ln-pass').value='';document.getElementById('ln-err').classList.remove('show');setSyncStatus('idle');showList();showScreen('screen-login');}
+function doLock(){MP=null;VAULT=null;CUR_SITE=null;document.getElementById('ln-pass').value='';document.getElementById('ln-err').classList.remove('show');setSyncStatus('idle');if(typeof updateHeaderStats==='function')updateHeaderStats();showList();showScreen('screen-login');}
 
 function showReset(){
   closeModal('modal-settings');

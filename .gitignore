@@ -33,3 +33,4 @@ android/.idea/deploymentTargetSelector.xml
 android/.idea/deviceManager.xml
 android/.idea/shelf/
 android/**/*.iml
+*.apk

@@ -9,12 +9,6 @@
     <!-- Biometric Authentication (Fingerprint & Face unlock) -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
-    <!-- Floating Shield Overlay permissions -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <application
         android:name=".ReWordApplication"
         android:allowBackup="false"
@@ -43,14 +37,7 @@
             android:exported="false"
             android:theme="@style/Theme.ReWord.Translucent" />
 
-        <!-- Floating Shield Credential Picker Dialog -->
-        <activity
-            android:name=".service.FloatingPickerActivity"
-            android:exported="false"
-            android:theme="@style/Theme.ReWord.Translucent"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!-- System-wide Autofill Service -->
+        <!-- System-wide Native Autofill Service -->
         <service
             android:name=".service.ReWordAutofillService"
             android:exported="true"
@@ -61,42 +48,6 @@
             <meta-data
                 android:name="android.autofill"
                 android:resource="@xml/autofill_service_config" />
-        </service>
-
-        <!-- Floating Shield Overlay Service -->
-        <service
-            android:name=".service.FloatingShieldService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Floating shield button for quick password autofill" />
-        </service>
-
-        <!-- Quick Settings Tile -->
-        <service
-            android:name=".service.ReWordTileService"
-            android:exported="true"
-            android:icon="@drawable/ic_reword_shield"
-            android:label="@string/tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
-
-        <!-- Accessibility Service for direct field autofill -->
-        <service
-            android:name=".service.ReWordAccessibilityService"
-            android:exported="true"
-            android:label="@string/accessibility_service_label"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_service_config" />
         </service>
 
     </application>

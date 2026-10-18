@@ -33,6 +33,7 @@ data class Site(
     @SerializedName("id") val id: String = "",
     @SerializedName("name") val name: String = "",
     @SerializedName("url") val url: String = "",
+    @SerializedName("tags") val tags: String? = "",
     @SerializedName("accounts") val accounts: List<Account> = emptyList()
 ) : Serializable
 

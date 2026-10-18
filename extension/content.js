@@ -241,7 +241,7 @@
       const rect = field.getBoundingClientRect();
       dropdown.style.top = `${window.scrollY + rect.bottom + 6}px`;
       dropdown.style.left = `${window.scrollX + rect.left}px`;
-      dropdown.style.width = `${Math.max(rect.width, 260)}px`;
+      dropdown.style.width = `${Math.max(rect.width, 280)}px`;
 
       if (res.isLocked) {
         dropdown.innerHTML = `
@@ -254,57 +254,125 @@
             <div style="font-size:11px;color:#a1a1aa;margin-top:4px;">افتح إضافة ReWord من شريط المتصفح لإلغاء القفل</div>
           </div>
         `;
-      } else if (res.matches && res.matches.length > 0) {
-        let itemsHtml = `
-          <div class="reword-dropdown-header">
-            <div class="reword-dropdown-brand">${SHIELD_SVG}<span>ReWord</span></div>
-            <span>${res.matches.length} حساب متاح</span>
-          </div>
-        `;
-
-        res.matches.forEach((acc, idx) => {
-          const letter = (acc.user || acc.siteName || 'R').charAt(0).toUpperCase();
-          itemsHtml += `
-            <div class="reword-dropdown-item" data-index="${idx}">
-              <div class="reword-item-avatar">${letter}</div>
-              <div class="reword-item-info">
-                <span class="reword-item-user">${acc.user}</span>
-                <span class="reword-item-sub">${acc.siteName || res.domain}</span>
-              </div>
-            </div>
-          `;
-        });
-
-        dropdown.innerHTML = itemsHtml;
-
-        // Attach item click handlers
-        dropdown.querySelectorAll('.reword-dropdown-item').forEach((item) => {
-          item.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const idx = parseInt(item.getAttribute('data-index'), 10);
-            const acc = res.matches[idx];
-            if (acc) {
-              const usernameField = field.type === 'password' ? findUsernameField(field) : field;
-              const passwordField = field.type === 'password' ? field : field.form?.querySelector('input[type="password"]');
-
-              if (usernameField && acc.user) setFieldValue(usernameField, acc.user);
-              if (passwordField && acc.pass) setFieldValue(passwordField, acc.pass);
-            }
-            closeDropdown();
-          });
-        });
       } else {
+        const hasMatches = res.matches && res.matches.length > 0;
+        const allList = res.allAccounts || [];
+
         dropdown.innerHTML = `
           <div class="reword-dropdown-header">
             <div class="reword-dropdown-brand">${SHIELD_SVG}<span>ReWord</span></div>
             <span>${res.domain || 'الموقع الحالي'}</span>
           </div>
-          <div class="reword-dropdown-locked">
-            <div>لا توجد حسابات مسجلة لهذا الموقع</div>
-            <div style="font-size:11px;color:#a1a1aa;margin-top:4px;">يمكنك حفظ بيانات الدخول من نافذة الإضافة</div>
+          ${!hasMatches ? `
+            <div class="reword-empty-notice">
+              لا توجد حسابات مسجلة لهذا الموقع
+            </div>
+          ` : ''}
+          <div class="reword-dropdown-search-wrap">
+            <input type="text" class="reword-search-input" placeholder="🔍 ابحث في الخزينة عن أي حساب..." ${!hasMatches ? 'autofocus' : ''}>
+          </div>
+          <div class="reword-search-results"></div>
+          <div class="reword-dropdown-footer">
+            <button type="button" class="reword-btn-quick-save">+ حفظ بيانات هذا الموقع في ReWord</button>
           </div>
         `;
+
+        const resultsContainer = dropdown.querySelector('.reword-search-results');
+        const searchInput = dropdown.querySelector('.reword-search-input');
+        const saveBtn = dropdown.querySelector('.reword-btn-quick-save');
+
+        function fillCreds(acc) {
+          const usernameField = field.type === 'password' ? findUsernameField(field) : field;
+          const passwordField = field.type === 'password' ? field : field.form?.querySelector('input[type="password"]');
+
+          if (usernameField && acc.user) setFieldValue(usernameField, acc.user);
+          if (passwordField && acc.pass) setFieldValue(passwordField, acc.pass);
+          closeDropdown();
+        }
+
+        function renderList(accounts) {
+          resultsContainer.innerHTML = '';
+          if (!accounts || accounts.length === 0) {
+            resultsContainer.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:11px;padding:12px;">لا توجد حسابات مطابقة للبحث</div>';
+            return;
+          }
+          accounts.forEach((acc) => {
+            const item = document.createElement('div');
+            item.className = 'reword-dropdown-item';
+            const firstUrl = acc.siteUrl ? acc.siteUrl.split(/[,;\s]+/)[0].trim() : '';
+            const fav = firstUrl ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(firstUrl)}&sz=64` : '';
+            const letter = (acc.siteName || acc.user || 'W').charAt(0).toUpperCase();
+
+            item.innerHTML = `
+              <div class="reword-item-avatar">
+                ${fav ? `<img src="${fav}" class="reword-fav-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" alt="">` : ''}
+                <span style="${fav ? 'display:none;' : ''}">${letter}</span>
+              </div>
+              <div class="reword-item-info">
+                <span class="reword-item-user">${acc.user || 'بدون اسم مستخدم'}</span>
+                <span class="reword-item-sub">${acc.siteName || acc.siteUrl || res.domain}</span>
+              </div>
+            `;
+
+            item.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              fillCreds(acc);
+            });
+
+            resultsContainer.appendChild(item);
+          });
+        }
+
+        // Initially render matches if present, or all accounts
+        renderList(hasMatches ? res.matches : allList);
+
+        // Filter on search input
+        searchInput.addEventListener('input', (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          if (!q) {
+            renderList(hasMatches ? res.matches : allList);
+            return;
+          }
+          const filtered = allList.filter((a) =>
+            (a.user && a.user.toLowerCase().includes(q)) ||
+            (a.siteName && a.siteName.toLowerCase().includes(q)) ||
+            (a.siteUrl && a.siteUrl.toLowerCase().includes(q))
+          );
+          renderList(filtered);
+        });
+
+        // Quick Save Button
+        saveBtn.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const usernameField = field.type === 'password' ? findUsernameField(field) : field;
+          const passwordField = field.type === 'password' ? field : field.form?.querySelector('input[type="password"]');
+
+          const userVal = usernameField ? usernameField.value.trim() : '';
+          const passVal = passwordField ? passwordField.value : '';
+
+          if (!userVal && !passVal) {
+            alert('يرجى كتابة اسم المستخدم أو كلمة المرور في الصفحة أولاً ليتم حفظها');
+            return;
+          }
+
+          chrome.runtime.sendMessage({
+            action: 'SAVE_CREDENTIAL',
+            siteName: res.domain || window.location.hostname,
+            siteUrl: window.location.origin,
+            user: userVal,
+            pass: passVal,
+            notes: ''
+          }, (saveRes) => {
+            if (saveRes?.success) {
+              alert('✓ تم حفظ بيانات الدخول في ReWord بنجاح!');
+              closeDropdown();
+            } else {
+              alert('تعذر الحفظ: ' + (saveRes?.error || 'حدث خطأ'));
+            }
+          });
+        });
       }
 
       document.body.appendChild(dropdown);

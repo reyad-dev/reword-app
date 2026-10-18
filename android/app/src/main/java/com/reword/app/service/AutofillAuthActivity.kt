@@ -180,26 +180,79 @@ class AutofillAuthActivity : FragmentActivity() {
 
             val match = findBestAccount(vault, domain, pkg)
             if (match != null && (userField != null || passField != null)) {
-                val presentation = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
-                    setTextViewText(R.id.autofill_title, match.first.name.ifBlank { match.first.url })
-                    setTextViewText(R.id.autofill_subtitle, match.second.user)
-                }
-
-                val builder = Dataset.Builder(presentation)
-                userField?.let { builder.setValue(it, AutofillValue.forText(match.second.user), presentation) }
-                passField?.let { builder.setValue(it, AutofillValue.forText(match.second.pass), presentation) }
-
-                val replyIntent = Intent().apply {
-                    putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, builder.build())
-                }
-                setResult(Activity.RESULT_OK, replyIntent)
+                returnDataset(match.first, match.second, userField, passField)
+            } else if (vault.sites.isNotEmpty()) {
+                showAccountChooser(vault, userField, passField)
             } else {
                 setResult(Activity.RESULT_CANCELED)
+                finish()
             }
         } catch (e: Exception) {
             Toast.makeText(this, "كلمة المرور غير صحيحة", Toast.LENGTH_SHORT).show()
             setResult(Activity.RESULT_CANCELED)
+            finish()
         }
+    }
+
+    private fun showAccountChooser(
+        vault: Vault,
+        userField: AutofillId?,
+        passField: AutofillId?
+    ) {
+        val items = mutableListOf<Pair<Site, Account>>()
+        val displayLabels = mutableListOf<String>()
+
+        for (site in vault.sites) {
+            for (acc in site.accounts) {
+                items.add(Pair(site, acc))
+                val title = site.name.ifBlank { site.url }
+                displayLabels.add("$title (${acc.user})")
+            }
+        }
+
+        if (items.isEmpty()) {
+            Toast.makeText(this, "لا توجد حسابات مسجلة في الخزينة", Toast.LENGTH_SHORT).show()
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+            return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("اختر الحساب للملء التلقائي")
+            .setItems(displayLabels.toTypedArray()) { _, which ->
+                val selected = items[which]
+                returnDataset(selected.first, selected.second, userField, passField)
+            }
+            .setNegativeButton(R.string.biometric_prompt_cancel) { _, _ ->
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+            .setOnCancelListener {
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+            .show()
+    }
+
+    private fun returnDataset(
+        site: Site,
+        acc: Account,
+        userField: AutofillId?,
+        passField: AutofillId?
+    ) {
+        val presentation = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
+            setTextViewText(R.id.autofill_title, site.name.ifBlank { site.url })
+            setTextViewText(R.id.autofill_subtitle, acc.user)
+        }
+
+        val builder = Dataset.Builder(presentation)
+        userField?.let { builder.setValue(it, AutofillValue.forText(acc.user), presentation) }
+        passField?.let { builder.setValue(it, AutofillValue.forText(acc.pass), presentation) }
+
+        val replyIntent = Intent().apply {
+            putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, builder.build())
+        }
+        setResult(Activity.RESULT_OK, replyIntent)
         finish()
     }
 
