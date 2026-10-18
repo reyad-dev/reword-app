@@ -9,6 +9,7 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Backend-Cloudflare%20Workers%20KV-F38020?logo=cloudflare)](https://workers.cloudflare.com/)
 [![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-4285F4?logo=googlechrome)](./extension)
 [![Android App](https://img.shields.io/badge/Android%20App-Kotlin%20%2B%20Compose-3DDC84?logo=android)](./android)
+[![Download APK](https://img.shields.io/badge/Download%20APK-v1.2.0-success?logo=android)](https://github.com/reyad-dev/reword-app/releases/download/v1.2.0/ReWord-v1.2.0.apk)
 [![Security](https://img.shields.io/badge/Encryption-AES--256--GCM%20%2B%20PBKDF2%20(310k)-blueviolet)](#-security--cryptography-model)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
