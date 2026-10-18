@@ -20,6 +20,6 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 2c68a36dfcbbb0e06ef28d8d2781b103
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy . --project-name=reword-app
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
