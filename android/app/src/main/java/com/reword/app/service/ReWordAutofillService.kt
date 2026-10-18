@@ -49,9 +49,10 @@ class ReWordAutofillService : AutofillService() {
 
         // Parse view hierarchy
         val parsed = parseStructure(structure)
-        val targetUser = parsed.usernameFields.firstOrNull() ?: parsed.allEditableFields.firstOrNull()
-        val targetPass = parsed.passwordFields.firstOrNull() ?: parsed.allEditableFields.getOrNull(1)
+        val targetUser = parsed.usernameFields.firstOrNull()
+        val targetPass = parsed.passwordFields.firstOrNull()
 
+        // ONLY trigger if at least one targetUser (email/username) or targetPass (password) is found
         if (targetUser == null && targetPass == null) {
             callback.onSuccess(null)
             return
@@ -69,7 +70,11 @@ class ReWordAutofillService : AutofillService() {
 
         // Vault is unlocked: find matching site & accounts
         val matchingSites = findMatchingSites(activeVault, parsed.webDomain, parsed.packageName)
-        val candidateSites = if (matchingSites.isNotEmpty()) matchingSites else activeVault.sites.take(10)
+        val candidateSites = when {
+            matchingSites.isNotEmpty() -> matchingSites
+            targetPass != null -> activeVault.sites.take(5) // Only suggest vault accounts when a password field is present
+            else -> emptyList()
+        }
 
         if (candidateSites.isEmpty()) {
             callback.onSuccess(null)
@@ -191,16 +196,13 @@ class ReWordAutofillService : AutofillService() {
         val targetIds = mutableListOf<AutofillId>()
         parsed.usernameFields.firstOrNull()?.let { targetIds.add(it) }
         parsed.passwordFields.firstOrNull()?.let { targetIds.add(it) }
-        if (targetIds.isEmpty()) {
-            parsed.allEditableFields.firstOrNull()?.let { targetIds.add(it) }
-        }
         if (targetIds.isEmpty()) return null
 
         val intent = Intent(this, AutofillAuthActivity::class.java).apply {
             putExtra(AutofillAuthActivity.EXTRA_DOMAIN, parsed.webDomain)
             putExtra(AutofillAuthActivity.EXTRA_PACKAGE, parsed.packageName)
-            putExtra(AutofillAuthActivity.EXTRA_USER_FIELD, parsed.usernameFields.firstOrNull() ?: parsed.allEditableFields.firstOrNull())
-            putExtra(AutofillAuthActivity.EXTRA_PASS_FIELD, parsed.passwordFields.firstOrNull() ?: parsed.allEditableFields.getOrNull(1))
+            putExtra(AutofillAuthActivity.EXTRA_USER_FIELD, parsed.usernameFields.firstOrNull())
+            putExtra(AutofillAuthActivity.EXTRA_PASS_FIELD, parsed.passwordFields.firstOrNull())
         }
 
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -279,25 +281,17 @@ class ReWordAutofillService : AutofillService() {
             traverseNode(node, parsed)
         }
 
-        // Heuristic fallback:
-        // If password is found, but username wasn't explicitly labeled:
-        // Any editable field before the password is the username/email field!
+        // Heuristic fallback ONLY when an actual password field exists on the screen:
+        // In standard login forms, any valid non-password editable field before the password is the username/email.
         if (parsed.passwordFields.isNotEmpty() && parsed.usernameFields.isEmpty()) {
             val firstPasswordId = parsed.passwordFields.first()
             val passIndex = parsed.allEditableFields.indexOf(firstPasswordId)
             if (passIndex > 0) {
                 parsed.usernameFields.add(parsed.allEditableFields[passIndex - 1])
-            } else if (parsed.allEditableFields.size > 1) {
-                val nonPass = parsed.allEditableFields.firstOrNull { it != firstPasswordId }
-                if (nonPass != null) parsed.usernameFields.add(nonPass)
             }
         }
 
-        // If only 1 editable field on the screen and neither was flagged:
-        if (parsed.usernameFields.isEmpty() && parsed.passwordFields.isEmpty() && parsed.allEditableFields.isNotEmpty()) {
-            parsed.usernameFields.add(parsed.allEditableFields.first())
-        }
-
+        // Solitary editable fields without credentials are never treated as usernames (prevents WhatsApp/chat popups).
         return parsed
     }
 
@@ -308,7 +302,7 @@ class ReWordAutofillService : AutofillService() {
         }
 
         val autofillId = node.autofillId
-        val hints = node.autofillHints?.map { it.lowercase() } ?: emptyList()
+        val hints = node.autofillHints?.map { it.lowercase().trim() } ?: emptyList()
         val idEntry = node.idEntry?.lowercase().orEmpty()
         val hintText = (node.hint?.toString() ?: "").lowercase()
         val text = (node.text?.toString() ?: "").lowercase()
@@ -316,59 +310,82 @@ class ReWordAutofillService : AutofillService() {
         val className = node.className.orEmpty()
         val inputType = node.inputType
 
+        val classType = inputType and InputType.TYPE_MASK_CLASS
+        val variation = inputType and InputType.TYPE_MASK_VARIATION
+        val isMultiLine = (inputType and InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0
+
         val combinedText = "$idEntry $hintText $text $contentDesc"
 
-        val isEditable = (autofillId != null) && (
-            className.contains("EditText", ignoreCase = true) ||
-            className.contains("TextInput", ignoreCase = true) ||
-            (inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT ||
-            node.isFocused
+        // Chat / messaging / search exclusions (WhatsApp, Telegram, Notes, Search bars, etc.)
+        val isMessageVariation = variation in listOf(
+            InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE,
+            InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE,
+            InputType.TYPE_TEXT_VARIATION_FILTER
         )
 
-        if (isEditable && autofillId != null) {
-            if (!parsed.allEditableFields.contains(autofillId)) {
-                parsed.allEditableFields.add(autofillId)
-            }
-        }
+        val hasNegativeKeyword = listOf(
+            "message", "chat", "msg", "comment", "search", "query", "filter", "compose", "tweet", "post",
+            "رسالة", "رساله", "دردشة", "دردشه", "بحث", "تعليق", "منشور", "تغريدة"
+        ).any { combinedText.contains(it) }
 
-        // Password detection
-        val isPasswordClass = (inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT
-        val isPasswordVariation = (inputType and InputType.TYPE_MASK_VARIATION) in listOf(
+        // 1. Password detection
+        val isTextPasswordVariation = classType == InputType.TYPE_CLASS_TEXT && variation in listOf(
             InputType.TYPE_TEXT_VARIATION_PASSWORD,
             InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
             InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD
         )
-        val isNumericPassword = (inputType and InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_NUMBER &&
-            (inputType and InputType.TYPE_MASK_VARIATION) == InputType.TYPE_NUMBER_VARIATION_PASSWORD
+        val isNumericPassword = classType == InputType.TYPE_CLASS_NUMBER &&
+            variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD
 
-        val hasPasswordHint = hints.any { it.contains("password") } ||
-            listOf("password", "pass", "pwd", "pin", "مرور", "السر", "سر").any { combinedText.contains(it) }
+        val hasPasswordHint = hints.any { h ->
+            h.contains("password") || h.contains("pwd")
+        } || listOf("password", "passwd", "pwd", "passcode", "secret", "pin", "كلمة المرور", "كلمه المرور", "كلمة_المرور", "السر", "رمز المرور", "رمز_المرور").any { combinedText.contains(it) }
 
-        val isPassword = (isPasswordClass && isPasswordVariation) || isNumericPassword || hasPasswordHint
+        val isPassword = isTextPasswordVariation || isNumericPassword || hasPasswordHint
 
-        // Username / Email detection
-        val isEmailVariation = (inputType and InputType.TYPE_MASK_VARIATION) in listOf(
+        // 2. Email detection
+        val isEmailVariation = classType == InputType.TYPE_CLASS_TEXT && variation in listOf(
             InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
             InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
         )
-        val isPersonNameVariation = (inputType and InputType.TYPE_MASK_VARIATION) == InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+        val hasEmailHint = hints.any { h ->
+            h.contains("email") || h.contains("emailaddress")
+        } || listOf("email", "e-mail", "mail", "بريد", "إلكتروني", "الكتروني", "البريد").any { combinedText.contains(it) }
 
-        val hasUsernameHint = hints.any { it.contains("user") || it.contains("email") || it.contains("login") } ||
-            listOf(
-                "user", "username", "email", "mail", "login", "account", "phone",
-                "مستخدم", "اسم المستخدم", "بريد", "إلكتروني", "الكتروني", "حساب", "تسجيل", "هاتف", "جوال"
-            ).any { combinedText.contains(it) }
+        val isEmail = (isEmailVariation || hasEmailHint) && !isMultiLine && !isMessageVariation && !hasNegativeKeyword
 
-        val isUsername = isEmailVariation || isPersonNameVariation || hasUsernameHint
+        // 3. Username detection
+        val hasUsernameHint = hints.any { h ->
+            h.contains("username") || h.contains("login")
+        } || listOf("username", "user_name", "user-name", "userid", "user_id", "login", "اسم المستخدم", "اسم_المستخدم", "اسم مستخدم", "المستخدم").any { combinedText.contains(it) }
+
+        val isUsername = hasUsernameHint && !isMultiLine && !isMessageVariation && !hasNegativeKeyword
+
+        // General single-line editable candidate for login form heuristic (strictly non-message / non-chat)
+        val isCandidateField = (autofillId != null) && (
+            className.contains("EditText", ignoreCase = true) ||
+            className.contains("TextInput", ignoreCase = true) ||
+            classType == InputType.TYPE_CLASS_TEXT
+        ) && !isMultiLine && !isMessageVariation && !hasNegativeKeyword
 
         if (autofillId != null) {
             if (isPassword) {
                 if (!parsed.passwordFields.contains(autofillId)) {
                     parsed.passwordFields.add(autofillId)
                 }
-            } else if (isUsername) {
+                if (!parsed.allEditableFields.contains(autofillId)) {
+                    parsed.allEditableFields.add(autofillId)
+                }
+            } else if (isEmail || isUsername) {
                 if (!parsed.usernameFields.contains(autofillId)) {
                     parsed.usernameFields.add(autofillId)
+                }
+                if (!parsed.allEditableFields.contains(autofillId)) {
+                    parsed.allEditableFields.add(autofillId)
+                }
+            } else if (isCandidateField) {
+                if (!parsed.allEditableFields.contains(autofillId)) {
+                    parsed.allEditableFields.add(autofillId)
                 }
             }
         }

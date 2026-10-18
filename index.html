@@ -7,14 +7,47 @@
 <meta name="theme-color" content="#7c3aed">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="ReWord - مدير كلمات المرور الآمن يعمل بدون إنترنت">
+<meta name="description" content="ReWord - مدير كلمات المرور الآمن والمشفر بمبدأ المعرفة الصفرية (Zero-Knowledge) واستضافة مجانية على Cloudflare مع ملء تلقائي على أندرويد وكروم">
+<meta name="keywords" content="مدير كلمات المرور, password manager, zero-knowledge, cloudflare pages, cloudflare workers, android autofill, chrome extension, تشفير, استضافة ذاتية">
+<meta name="author" content="ReWord Open Source Community">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ReWord - Zero-Knowledge Password Manager & System Autofill">
+<meta property="og:description" content="Secure, open-source, client-side encrypted password manager. Self-host on Cloudflare for free with Android & Chrome extension autofill.">
+<meta property="og:image" content="./icon.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ReWord - Secure Zero-Knowledge Password Manager">
+<meta name="twitter:description" content="Open-source client-side encrypted password manager with system autofill on Android & Chrome, hosted for free on Cloudflare.">
+<meta name="twitter:image" content="./icon.png">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>ReWord - مدير كلمات المرور</title>
+<title>ReWord - مدير كلمات المرور الآمن (Zero-Knowledge Vault)</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="../icon.png">
+<link rel="apple-touch-icon" href="./icon.png">
 <link rel="stylesheet" href="style.css?v=13">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ReWord",
+  "operatingSystem": "Web, Android, Windows, macOS, Linux",
+  "applicationCategory": "SecurityApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Zero-Knowledge self-hosted password manager & system autofill suite powered by Cloudflare and client-side AES-256-GCM encryption.",
+  "softwareVersion": "1.2.0",
+  "featureList": [
+    "Zero-Knowledge AES-256-GCM & PBKDF2 encryption",
+    "Chrome Extension Manifest V3 Autofill",
+    "Native Android Autofill Service with Biometrics",
+    "Cloudflare Pages & Workers KV serverless sync",
+    "Password import from Chrome, Edge, Firefox, Safari CSV"
+  ]
+}
+</script>
 <script>
 function cleanWorkerUrl(url) {
   if (!url) return '';

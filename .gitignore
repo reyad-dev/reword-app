@@ -31,6 +31,7 @@ android/.idea/caches/
 android/.idea/workspace.xml
 android/.idea/deploymentTargetSelector.xml
 android/.idea/deviceManager.xml
-android/.idea/shelf/
 android/**/*.iml
 *.apk
+!ReWord.apk
+

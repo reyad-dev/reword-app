@@ -2,6 +2,10 @@ name = "reword-vault-sync"
 main = "worker/index.js"
 compatibility_date = "2026-06-09"
 
+# Cloudflare KV Namespace for encrypted vault blobs
+# Create your own KV namespace by running:
+# npx wrangler kv namespace create vaults
+# Then replace the id below with your generated ID:
 [[kv_namespaces]]
 binding = "VAULTS"
 id = "11d0165d992241cdb2889b75515a6a65"

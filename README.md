@@ -1,390 +1,494 @@
 <p align="center">
-  <img src="repo-icon.svg" width="180" alt="ReWord password manager icon" />
+  <img src="repo-icon.svg" width="160" alt="ReWord password manager logo" />
 </p>
 
-# 🛡️ ReWord - Secure Zero-Knowledge Password Manager & Autofill Suite
-### مدير كلمات المرور الآمن والمشفر بمبدأ المعرفة الصفرية (Zero-Knowledge) مع الملء التلقائي (Autofill)
+# 🛡️ ReWord - Secure Zero-Knowledge Password Manager & System Autofill Suite
+### مدير كلمات المرور الآمن والمشفر بمبدأ المعرفة الصفرية (Zero-Knowledge) مفتوح المصدر
 
-[![Cloudflare Pages](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Pages-f38020?logo=cloudflare)](https://reword-app.pages.dev/)
+[![Cloudflare Pages](https://img.shields.io/badge/Frontend-Cloudflare%20Pages-f38020?logo=cloudflare)](https://pages.cloudflare.com/)
 [![Cloudflare Workers](https://img.shields.io/badge/Backend-Cloudflare%20Workers%20KV-F38020?logo=cloudflare)](https://workers.cloudflare.com/)
 [![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-4285F4?logo=googlechrome)](./extension)
 [![Android App](https://img.shields.io/badge/Android%20App-Kotlin%20%2B%20Compose-3DDC84?logo=android)](./android)
-[![Download APK](https://img.shields.io/badge/Download%20APK-v1.2.0-success?logo=android)](https://github.com/reyad-dev/reword-app/releases/download/v1.2.0/ReWord-v1.2.0.apk)
-[![Security](https://img.shields.io/badge/Encryption-AES--256--GCM%20%2B%20PBKDF2%20(310k)-blueviolet)](#-security--cryptography-model)
+[![Download APK](https://img.shields.io/badge/Download-ReWord.apk-success?logo=android)](./ReWord.apk)
+[![Encryption](https://img.shields.io/badge/Encryption-AES--256--GCM%20%2B%20PBKDF2%20(310k)-blueviolet)](#-نموذج-الأمان-والتشفير-security--cryptography-model)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
 ---
 
+### 🌐 اختار لغة الدليل / Choose Language:
+* [📖 الدليل باللغة العربية (Arabic Documentation)](#-الدليل-باللغة-العربية)
+* [📖 English Documentation](#-english-documentation)
+
+---
+
+# 📖 الدليل باللغة العربية
+
 ## 🌟 نظرة عامة (Overview)
 
-**ReWord** هو نظام متكامل لإدارة كلمات المرور وتأمين الهوية الرقمية، مصمم وفق مبدأ **المعرفة الصفرية (Zero-Knowledge)**. يعمل بدون إنترنت (Offline-First) كـ Progressive Web App (PWA)، ويتزامن سحابياً وبشكل مشفر تماماً عبر خوادم **Cloudflare Workers & KV**، مع **إضافة متصفح (Chrome Extension - Manifest V3)** تدعم ميزة **الملء التلقائي (Autofill)** الذكي داخل صفحات تسجيل الدخول.
+**ReWord** هو نظام متكامل ومفتوح المصدر لإدارة كلمات المرور وتأمين الهوية الرقمية، مصمم بالكامل وفق مبدأ **المعرفة الصفرية (Zero-Knowledge)** ونهج **الاستضافة الذاتية المجانية (Self-Hosted)**. 
+
+يتيح لك النظام امتلاك خزنتك المشفرة دون الاعتماد على أي خوادم تتبع لأطراف ثالثة:
+* **تطبيق ويب تقدمي (PWA):** يعمل محلياً بدون إنترنت (Offline-First) ويُستضاف مجاناً على **Cloudflare Pages**.
+* **محفظة وخادم مزامنة مشفر (Sync Backend):** يعمل عبر دوال سحابية فائقة السرعة على **Cloudflare Workers & KV** على حسابك الشخصي مجاناً بتكلفة **0$**.
+* **إضافة متصفح كروم (Chrome Extension - Manifest V3):** تكتشف صفحات تسجيل الدخول وتوفر ملء تلقائي آمن بضغطة زر.
+* **تطبيق أندرويد أصلي (Native Kotlin & Jetpack Compose):** يوفر خدمة الملء التلقائي الشاملة للنظام (System Autofill Service) مع حصر الظهور بدقة في حقول (اسم المستخدم، البريد الإلكتروني، وكلمات المرور) وتأكيد العمليات ببصمة الإصبع أو الوجه (`BiometricPrompt`).
 
 > [!IMPORTANT]
-> **مبدأ المعرفة الصفرية (Zero-Knowledge):** لا يتم إرسال كلمة المرور الرئيسية أو أي بيانات غير مشفرة إلى أي خادم على الإطلاق. عمليات التشفير وفك التشفير تتم محلياً 100% داخل جهاز المستخدم باستخدام واجهة `Web Crypto API` القياسية.
+> **مبدأ المعرفة الصفرية (Zero-Knowledge):**
+> لا يتم إرسال كلمة المرور الرئيسية أو أي بيانات غير مشفرة إلى أي خادم إطلاقاً. كافة عمليات التشفير وفك التشفير تتم محلياً 100% داخل جهاز المستخدم باستخدام واجهة التشفير القياسية `Web Crypto API` على الويب والإضافة، و `Cipher (AES-GCM)` على الأندرويد. خوادم Cloudflare لا تخزن سوى كتل بيانات مشفرة بالكامل (Ciphertext Blobs) لا يمكن فكها بدون كلمتك الرئيسية.
 
 ---
 
 ## ✨ المميزات الرئيسية (Core Features)
 
-* 🔐 **تشفير قياسي فائق الأمان (Military-Grade Encryption):**
+* 🔐 **تشفير قياسي فائق الأمان (Military-Grade Cryptography):**
+  * تشفير متماثل **AES-256-GCM** مع Salt فريد (32 بايت) و IV عشوائي (12 بايت) لكل عملية حفظ.
   * اشتقاق المفاتيح عبر **PBKDF2 مع SHA-256 بـ 310,000 تكرار** (مطابق لتوصيات OWASP لمقاومة هجمات القوة الغاشمة).
-  * حماية هويات المزامنة بتوليد SHA-256 Hashes لا يمكن عكسها (`reword:v1:${syncId}`).
+  * حماية هويات المزامنة بتوليد كود SHA-256 لا يمكن عكسه (`reword:v1:${syncId}`).
 
-* ⚡ **إضافة جوجل كروم للملء التلقائي (Chrome Extension Autofill v1.1.1):**
-  * إضافة مبنية وفق أحدث معايير **Manifest V3** مع شعار ReWord الرسمي المحدّث.
-  * محرك كشف فوري ذكي من 5 طبقات (`isFieldVisible`) لفحص الحقول النشطة ومنع الأيقونات الشبحية.
-  * زر درع تفاعلي داخل حقول اسم المستخدم وكلمات المرور في أي موقع.
-  * نظام تنظيف تلقائي فوري للأيقونات عند تسجيل الدخول (`submit`, `click`, `Enter`, SPA route change).
-  * قائمة منسدلة فورية لاقتراح الحسابات المتطابقة مع النطاق الحالي (Domain).
-  * تعبئة تلقائية فائقة السرعة بضغطة زر مع دعم أطر العمل الحديثة (React, Vue, Angular).
-  * قفل تلقائي ذكي بعد فترة عدم نشاط لحماية البيانات، وإدارة ذكية للموارد عبر وضع السكون `(inactive)`.
+* 🔄 **استيراد وتصدير شامل لكلمات المرور (Password Import & Export):**
+  * **استيراد من المتصفحات عبر ملفات CSV:** يدعم استيراد كلمات المرور المحفوظة من **Google Chrome**، **Microsoft Edge**، **Mozilla Firefox**، و **Apple Safari**.
+  * **استيراد من مديري كلمات المرور:** متوافق مع ملفات CSV المصدرة من Bitwarden و 1Password و LastPass (كشف تلقائي للأعمدة: اسم الموقع، الرابط، اسم المستخدم/البريد، كلمة المرور).
+  * **استيراد وتصدير الخزائن المشفرة:** تصدير واستيراد ملفات `.reword` المشفرة للنقل الفوري والنسخ الاحتياطي بين الأجهزة.
+  * **تصدير تقارير إكسل (XLSX):** تصدير بيانات الحسابات إلى ملف إكسل منسق وجاهز للطباعة مبني كلياً بصيغة OpenXML بدون أي مكتبات خارجية.
+  * **تصدير CSV قياسي:** إمكانية تصدير البيانات كملف CSV عام.
 
-* ☁️ **مزامنة سحابية فائقة الخفة (Cloudflare Serverless Sync):**
-  * استخدام **Cloudflare Worker** كخادم وسيط بدون خوادم تقليدية.
-  * تخزين البيانات المشفرة كـ Encrypted Blobs في **Cloudflare KV**.
-  * حماية ضد تعارض التعديلات (Conflict Detection) بالاعتماد على الطوابع الزمنية (`timestamp`).
+* 📱 **تطبيق أندرويد أصلي متكامل (Native Android App):**
+  * مبني بالكامل بلغة **Kotlin** مع واجهات **Jetpack Compose (Material 3)** وخط عربي أنيق.
+  * دعم **خدمة الملء التلقائي القياسية (Android Autofill Framework)** مع حصر الاقتراحات الذكية في حقول:
+    * اسم المستخدم (Username)
+    * البريد الإلكتروني (Email Address)
+    * كلمات المرور (Password / PIN)
+  * **منع الإزعاج في التطبيقات الأخرى:** لا يظهر التطبيق إطلاقاً في حقول الرسائل والمحادثات (مثل رسائل واتساب وتلغرام) أو حقول البحث والتعليقات.
+  * حماية بيومترية متقدمة عبر بصمة الإصبع أو الوجه (`BiometricPrompt`) مع حماية مفاتيح التشفير عبر عتاد الهاتف المشفر (`Android Keystore`).
 
-* 📱 **تطبيق ويب تقدمي (PWA & Offline First):**
-  * تخزين محلي آمن في المتصفح باستخدام **IndexedDB**.
-  * ملف `sw.js` (Service Worker) لتشغيل التطبيق والوصول للخزينة بدون اتصال بالإنترنت.
-  * واجهة مستخدم عربية وأنيقة مع تصميم داكن عصري مستوحى من أفضل أدوات الإنتاجية.
+* ⚡ **إضافة جوجل كروم (Manifest V3):**
+  * كشف فوري لحقول الدخول مع زر درع ReWord التفاعلي وقائمة منسدلة للحسابات المتطابقة.
+  * قفل تلقائي ذكي بعد فترة عدم نشاط، ونظام تنظيف فوري للأيقونات عند إرسال النموذج أو تسجيل الدخول.
 
-* 🔄 **إدارة البيانات والنسخ الاحتياطي (Import & Export):**
-  * تصدير واستيراد الخزائن المشفرة بامتداد `.reword`.
-  * استيراد كلمات المرور من المتصفحات وتطبيقات مثل Bitwarden عبر ملفات CSV.
-  * تصدير تقارير الجداول بتنسيق Excel XLSX.
+* ☁️ **استضافة ذاتية مجانية 100% (Cloudflare Serverless):**
+  * استضافة موقع الويب على **Cloudflare Pages** بسرعة البرق وشبكة CDN عالمية.
+  * تشغيل محفظة المزامنة عبر **Cloudflare Worker & KV** مجاناً (100,000 طلب يومياً و1 جيجابايت تخزين مجاناً مدى الحياة وبدون بطاقة بنكية).
 
 ---
 
-## 🏗️ آلية العمل والمعمارية (How It Works)
+## 📥 استيراد كلمات المرور المدعومة (Supported Import Formats)
+
+يوفر التطبيق محرك استيراد ذكي يقوم بفرز الأعمدة، واستخراج أسماء المواقع من الروابط تلقائياً، وتفادي تكرار الحسابات الموجودة:
+
+| المصدر / التنسيق | نوع الملف | الأعمدة المدعومة تلقائياً |
+| :--- | :---: | :--- |
+| **نسخة احتياطية ReWord** | `.reword` / `.json` | استيراد كامل للخزينة مع التشفير والملاحظات والحسابات المتعددة |
+| **جوجل كروم (Google Chrome)** | `.csv` | `name`, `url`, `username`, `password` |
+| **مايكروسوفت إيدج (Microsoft Edge)** | `.csv` | `name`, `url`, `username`, `password` |
+| **موزيلا فايرفوكس (Mozilla Firefox)** | `.csv` | `url`, `username`, `password`, `httpRealm`, `formActionOrigin` |
+| **أبل سفاري (Apple Safari)** | `.csv` | `Title`, `URL`, `User Name`, `Password` |
+| **بت واردن (Bitwarden)** | `.csv` | `folder`, `favorite`, `type`, `name`, `notes`, `login_uri`, `login_username`, `login_password` |
+| **أي ملف CSV عام** | `.csv` | أي ملف يحتوي على أعمدة للرابط (`url`/`origin`) واسم المستخدم (`username`/`login`/`user`) وكلمة المرور (`password`) |
+
+### خطوات استيراد كلمات المرور:
+1. افتح تطبيق الويب (أو التطبيق المثبت على جهازك).
+2. افتح **الإعدادات (Settings)** من أعلى الشاشة.
+3. اضغط على **"استيراد من المتصفح (CSV)"** واختر الملف المصدر من متصفحك أو تطبيقك السابق.
+4. سيتم فوراً استيراد كافة الحسابات وتصنيفها وتشفيرها داخل خزينتك مع إشعار بنجاح العملية وعدد الحسابات الجديدة.
+
+---
+
+## 🏗️ آلية العمل والمعمارية (Architecture)
 
 ```
 ┌────────────────────────────────────────────────────────┐
 │             جهاز المستخدم (Client-Side)                │
 │                                                        │
-│  [ المتصفح / PWA ]   أو   [ إضافة كروم Extension ]     │
-│        │                          │                    │
-│   (IndexedDB)                 (Autofill)               │
-│        │                          │                    │
-│        ▼                          ▼                    │
-│    Web Crypto API: PBKDF2 (310k) + AES-256-GCM         │
-│  (التشفير وفك التشفير يحدث هنا فقط داخل جهازك!)       │
+│  [ المتصفح / PWA ]  أو  [ إضافة كروم ]  أو  [ الأندرويد ]  │
+│        │                      │                   │    │
+│    IndexedDB              Autofill            Keystore │
+│        │                      │                   │    │
+│        ▼                      ▼                   ▼    │
+│    Crypto Engine: PBKDF2 (310k) + AES-256-GCM           │
+│    (التشفير وفك التشفير يتم محلياً 100% داخل جهازك!)   │
 └───────────────────────────┬────────────────────────────┘
                             │
-              يرسل فقط بيانات مشفرة بالكامل
-                   (Encrypted Blob)
+               يرسل فقط كتل بيانات مشفرة
+                    (Encrypted Blob)
                             │
                             ▼
 ┌────────────────────────────────────────────────────────┐
 │             سيرفرات Cloudflare (Serverless)            │
 │                                                        │
-│   [ Cloudflare Worker: reword-vault-sync ]             │
-│        │                                               │
-│        ▼                                               │
-│   [ Cloudflare KV: vaults ]                            │
-│   (تخزن كتل البيانات المشفرة دون معرفة محتواها أبداً)  │
+│   [ Cloudflare Pages ] ──> استضافة الواجهة (Frontend)  │
+│   [ Cloudflare Worker ] ──> خادم المزامنة (/vault)     │
+│   [ Cloudflare KV ] ────> تخزين كتل البيانات المشفرة  │
+│   (السيرفر لا يرى كلمات المرور أو البيانات أبداً!)    │
 └────────────────────────────────────────────────────────┘
 ```
 
-### 1. طبقة التشفير الفائق (The Cryptography Engine):
-* **كلمة المرور الرئيسية (Master Password):** لا تغادر جهازك إطلاقاً ولا تُحفظ في أي قاعدة بيانات.
-* **اشتقاق المفتاح:** عند إدخال كلمة المرور، تُمرر لخوارزمية **PBKDF2 مع SHA-256 بعدد 310,000 دورة تكرار** لتوليد مفتاح تشفير 256-bit فائق القوة مع Salt بحجم 32 بايت.
-* **التشفير المتماثل:** تُشفر الخزينة بالكامل بخوارزمية **AES-256-GCM** مع `IV` عشوائي (12 بايت) لكل عملية حفظ.
-* **معرّف المزامنة (Sync ID):** لا يُرسل كما هو للسيرفر، بل يتم تحويله إلى كود تشفيري عبر **SHA-256 Hash** (`reword:v1:${syncId}`).
+---
 
-### 2. طبقة السحابة (Cloudflare Worker & KV):
-* الـ Worker هو دالة سحابية خفيفة جداً وسريعة (`worker/index.js`).
-* **دوره:** استلام الكتلة المشفرة وتخزينها في قاعدة بيانات **Cloudflare KV** السريعة والموزعة عالمياً.
-* **حماية التضارب (Conflict Detection):** يقارن الـ Worker الطابع الزمني (`timestamp`) للخزينة لضمان عدم الكتابة فوق تعديل أحدث من جهاز آخر.
-* **الاستقلالية والخصوصية التامة (Self-Hosted Zero-Knowledge):**
-  * السيرفر والـ KV لا يريان سوى كتل بيانات مشفرة صامتة (Encrypted Blobs) لا يمكن فكها نهائياً بدون كلمتك الرئيسية.
-  * كل مستخدم ينشئ الـ Worker وقاعدة بيانات الـ KV الخاصة به على حسابه الشخصي المجاني في Cloudflare، لتكون خزينتك المشفرة تحت سيطرتك الكاملة دون المرور على خوادم أي طرف ثالث.
+## 🚀 دليل التحميل والرفع على Cloudflare خطوة بخطوة
 
-> [!NOTE]
-> **هل يعمل التطبيق بدون خادم أو وركر؟**
-> **نعم 100%!** إذا لم ترغب في استخدام أي سيرفر أو مزامنة سحابية، يمكنك ببساطة ترك خانة **Worker URL** فارغة عند إعداد الخزينة. سيعمل تطبيق الويب والإضافة وتطبيق الأندرويد كخزنة محلية مستقلة ومشفرة بالكامل داخل جهازك فقط (Local-First Offline Storage).
+يمكنك تشغيل واستضافة النظام بالكامل (الموقع + المحفظة وخادم المزامنة) على حسابك الشخصي المجاني في Cloudflare بخطوات بسيطة:
 
-### 3. تدفق التشفير وفك التشفير (Client-Side Encryption Sequence)
+### الخطوة 1: تحميل المشروع (Download / Clone)
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as المستخدم
-    participant Client as التطبيق / الإضافة (Client)
-    participant Crypto as Web Crypto API (SubtleCrypto)
-    participant Worker as Cloudflare Worker & KV
+* **باستخدام Git:**
+  ```bash
+  git clone https://github.com/<your-username>/reword-app.git
+  cd reword-app
+  ```
+* **أو بدون Git:**
+  * اضغط على زر **Code** الأخضر أعلى صفحة المستودع في GitHub ثم اختر **Download ZIP**.
+  * فك الضغط عن الملف في مجلد على جهازك.
 
-    User->>Client: إدخال كلمة المرور الرئيسية (Master Password)
-    Client->>Crypto: اشتقاق المفتاح (PBKDF2 x 310,000 + SHA-256)
-    Crypto-->>Client: مفتاح تشفير AES-GCM 256-bit
-    Client->>Crypto: تشفير بيانات الخزينة (AES-256-GCM + Random IV)
-    Crypto-->>Client: كتلة مشفرة آمنة (Ciphertext Blob)
-    Client->>Worker: رفع الكتلة المشفرة فقط (POST /vault)
-    Note over Worker: السيرفر يرى بيانات مشفرة فقط ولا يمتلك المفتاح أبداً!
+---
+
+### الخطوة 2: رفع الموقع الإلكتروني على Cloudflare Pages (الموقع)
+
+تطبيق الويب عبارة عن تطبيق PWA ثابت (Static Web App)، ويمكن رفعه وتشغيله عبر طريقتين:
+
+#### الطريقة الأولى: عبر لوحة تحكم Cloudflare (سهلة وبدون سطر أوامر - موصى بها)
+1. سجّل الدخول إلى حسابك في [Cloudflare Dashboard](https://dash.cloudflare.com/).
+2. من القائمة الجانبية، اختر **Compute (Workers & Pages)** ⬅ ثم اضغط **Create application**.
+3. اختر تبويب **Pages** ⬅ ثم اختر:
+   * **Connect to Git:** اربط حساب GitHub واختر مستودع `reword-app` الخاص بك.
+     * في إعدادات البناء (Build settings):
+       * Framework preset: اتركه `None`.
+       * Build command: اتركه فارغاً.
+       * Build output directory: اكتب `.` (أو اتركه الافتراضي).
+     * اضغط **Save and Deploy**.
+   * **أو Direct Upload (بدون ربط جيت هب):**
+     * اكتب اسم المشروع (مثلاً: `reword-vault`).
+     * اسحب وأفلت مجلد المشروع (الذي يحتوي على `index.html` و `core.js` و `style.css` و `sw.js` و `manifest.json`).
+     * اضغط **Deploy site**.
+4. ستحصل فوراً على رابط موقعك الخاص (مثال: `https://reword-vault.pages.dev`). يمكنك فتح الرابط من أي هاتف أو كمبيوتر وتثبيته كـ PWA.
+
+#### الطريقة الثانية: عبر سطر الأوامر (Wrangler CLI)
+```bash
+# تسجيل الدخول إلى كلاودفلير
+npx wrangler login
+
+# رفع مجلد الموقع مباشرة
+npx wrangler pages deploy . --project-name=reword-vault
 ```
 
 ---
 
-### 4. تدفق الملء التلقائي للإضافة (Chrome Extension Autofill Pipeline)
+### الخطوة 3: رفع محفظة المزامنة المشفرة على Cloudflare Workers & KV (المحفظة)
 
-```mermaid
-graph TD
-    Page["صفحة الويب (مثل facebook.com)"] -->|فحص الحقول| Content["content.js (Injected Script)"]
-    Content -->|إظهار أيقونة الدرع| Badge["أيقونة ReWord في الحقل"]
-    Badge -->|الضغط على الأيقونة| Request["طلب حسابات النطاق"]
-    Request -->|GET_MATCHING_CREDENTIALS| Background["background.js (Service Worker)"]
-    Background -->|فك التشفير في الذاكرة| Match["تطابق النطاق (Matching Accounts)"]
-    Match -->|إرجاع الحسابات| Content
-    Content -->|عرض القائمة المنسدلة| Dropdown["قائمة الحسابات المتاحة"]
-    Dropdown -->|اختيار الحساب| Inject["حقن اسم المستخدم وكلمة المرور + Dispatch Events"]
-    Inject -->|تعبئة الحقول| Page
+لتمكين المزامنة الفورية بين موقع الويب، وإضافة المتصفح، وتطبيق الأندرويد، ستقوم بإنشاء دالة Worker خفيفة وقاعدة بيانات KV مشفرة:
+
+#### الطريقة الأولى: عبر لوحة تحكم Cloudflare (سهلة ومباشرة)
+1. **إنشاء قاعدة بيانات KV (مخزن المحفظة):**
+   * من القائمة الجانبية في Cloudflare، اذهب إلى **Storage & Databases** ⬅ ثم **KV**.
+   * اضغط على **Create namespace**، واكتب الاسم: `vaults` ثم اضغط **Add**.
+2. **إنشاء دالة الـ Worker:**
+   * من القائمة الجانبية، اختر **Compute (Workers & Pages)** ⬅ ثم **Create application** ⬅ تبويب **Workers** ⬅ اضغط **Create Worker**.
+   * اكتب اسماً للدالة (مثلاً: `reword-sync`) واضغط **Deploy**.
+3. **وضع كود المزامنة المشفرة:**
+   * داخل صفحة الوركر، اضغط زر **Edit code**.
+   * احذف الكود الافتراضي، وانسخ كود ملف [`worker/index.js`](./worker/index.js) بالكامل من هذا المستودع والصقه بدلاً منه.
+   * اضغط **Save and deploy** في الزاوية العلوية.
+4. **ربط الـ KV بالوركر (خطوة هامة جداً):**
+   * ارجع لصفحة إعدادات الوركر ⬅ اضغط تبويب **Settings** ⬅ ثم **Bindings** (أو **Variables and Secrets**).
+   * تحت قسم **KV Namespace Bindings**، اضغط **Add**.
+   * في خانة **Variable name** اكتب بدقة بأحرف كبيرة: `VAULTS`.
+   * في خانة **KV namespace** اختر قاعدة البيانات التي أنشأتها: `vaults`.
+   * اضغط **Save and deploy**.
+5. **الحصول على رابط الوركر:**
+   * انسخ الرابط الظاهر أعلى صفحة الوركر الخاص بك (مثال: `https://reword-sync.<subdomain>.workers.dev`).
+
+#### الطريقة الثانية: عبر سطر الأوامر (Wrangler CLI)
+```bash
+# 1. إنشاء الـ KV Namespace
+npx wrangler kv namespace create vaults
+
+# 2. انسخ الـ id الناتج وضعه في ملف wrangler.toml في حقل id:
+# [[kv_namespaces]]
+# binding = "VAULTS"
+# id = "ضع_الـ_ID_الخاص_بك_هنا"
+
+# 3. نشر الوركر فوراً
+npx wrangler deploy
 ```
 
 ---
 
-## 📖 دليل الاستخدام التفصيلي (How to Use)
+### الخطوة 4: ربط التطبيقات والمزامنة
 
-### أولاً: كيفية استخدام موقع الويب (ReWord Web App / PWA)
-
-1. **إنشاء الخزينة لأول مرة:**
-   * ادخل على الموقع: [reword-app.pages.dev](https://reword-app.pages.dev/).
-   * اختر **"إنشاء خزينة جديدة"** وأدخل كلمة مرور رئيسية قوية (واحفظها جيداً).
-   * يمكنك كتابة تلميح (Hint) لمساعدتك على تذكرها، وتعيين **Sync ID** للمزامنة مع رابط الـ Worker.
-2. **إضافة الحسابات:**
-   * اضغط **"+ إضافة موقع"** وأدخل اسم الموقع واسم المستخدم وكلمة المرور (أو اضغط زر التوليد السريع ⚡ لإنشاء كلمة مرور معقدة).
-3. **العمل بدون إنترنت (Offline Mode):**
-   * التطبيق مدعوم بتقنية PWA، يمكنك تثبيته على جهازك وسيعمل بكفاءة عبر IndexedDB حتى بدون اتصال بالشبكة.
-4. **المزامنة والربط بين الأجهزة:**
-   * من أي جهاز جديد، افتح الموقع واختر **"ربط خزنة موجودة"** وأدخل نفس الـ Sync ID وكلمة المرور لجلب بياناتك المشفرة فوراً.
-5. **النسخ الاحتياطي:**
-   * من الإعدادات يمكنك تصدير ملف `.reword` مشفر، أو استيراد وتصدير كلمات المرور عبر CSV و Excel XLSX.
+الآن بعد أن أصبح لديك رابط الموقع ورابط الوركر:
+1. افتح موقعك على Cloudflare Pages (أو التطبيق).
+2. اختر **"إنشاء خزينة جديدة"** وأدخل كلمة مرور رئيسية قوية (واحفظها جيداً).
+3. أدخل **Sync ID** من اختيارك (أي رمز سري فريد تختاره لربط أجهزتك) وضع رابط الـ Worker الخاص بك.
+4. **في إضافة كروم وتطبيق الأندرويد:** أدخل نفس الـ Sync ID وكلمة المرور ورابط الوركر ليتم مزامنة بياناتك المشفرة تلقائياً عبر كافة أجهزتك!
 
 ---
 
-### ثانياً: كيفية استخدام إضافة المتصفح (Chrome Extension)
+## 🧩 تثبيت إضافة متصفح كروم (Chrome Extension)
 
-1. **تثبيت الإضافة في المتصفح:**
-   * افتح `chrome://extensions/` في متصفح Google Chrome (أو أي متصفح مبني على Chromium).
-   * فعّل وضع المطور **Developer mode** من الزاوية العلوية.
-   * اضغط على **Load unpacked** واختر مجلد `extension`.
-2. **تثبيت وفتح الإضافة من شريط المتصفح العلوي (مهم):**
-   * اضغط على أيقونة **قطعة البازل (🧩 Extensions)** في شريط المتصفح العلوي.
-   * اضغط على علامة **الدبوس (📌 Pin)** بجانب **ReWord** لتثبيتها في الشريط.
-   * انقر مباشرة على أيقونة درع ReWord في الشريط لفتح واجهة الخزينة المنبثقة (Popup).
-   > [!TIP]
-   > صفحة `chrome://extensions` هي لإدارة الإضافات فقط ولا تفتح الواجهة عند النقر على البطاقة. كما أن ظهور حالة `service worker (inactive)` هو سلوك طبيعي لتوفير موارد الجهاز والبطارية في معيار Manifest V3.
-3. **ربط الإضافة بالخزينة:**
-   * أدخل الـ **Sync ID** ورابط الـ Worker وكلمة المرور الرئيسية لجلب بياناتك المشفرة وفك تشفيرها محلياً.
-4. **الملء التلقائي في أي موقع (Autofill):**
-   * عند زيارة أي موقع به حقول تسجيل دخول (مثل Facebook, Google, GitHub):
-     * ستظهر أيقونة درع ReWord تلقائياً داخل الحقل، اضغط عليها لاختيار الحساب والتعبئة بضغطة زر واحدة.
-     * أو افتح الإضافة من الشريط العلوي واضغط على زر **"تعبئة ⚡"** في قسم الموقع الحالي.
-   * عند إرسال النموذج أو الضغط على زر الدخول أو زر Enter، تختفي الأيقونات فوراً وبشكل تلقائي.
-5. **حفظ وتوليد الحسابات بسهولة:**
-   * يمكنك الضغط على **"+ إضافة حساب جديد"** من الإضافة لحفظ الحساب مع تعبئة رابط الموقع الحالي تلقائياً، أو استخدام مولد كلمات المرور المعقدة ⚡.
+1. افتح متصفح Google Chrome (أو Edge, Brave, Opera).
+2. اذهب إلى الرابط: `chrome://extensions/`.
+3. فعّل **Developer mode (وضع المطور)** من الزاوية العلوية.
+4. اضغط على زر **Load unpacked (تحميل حزمة غير مضغوطة)**.
+5. اختر مجلد `extension` من مسار المشروع.
+6. ثبّت الأيقونة في الشريط العلوي (Pin 📌) واضغط عليها لإدخال بيانات الخزينة والاستمتاع بالملء التلقائي في أي موقع تزوره.
 
 ---
 
-### ثالثاً: كيفية استخدام وبناء تطبيق الأندرويد (Android Native App)
+## 📱 تطبيق الأندرويد والملء التلقائي (Android App & Autofill)
 
-1. **بناء وتشغيل التطبيق عبر Android Studio:**
-   * افتح مجلد `android` في **Android Studio** (نسخة Iguana 2023.2.1 أو أحدث).
-   * انتظر حتى تكتمل مزامنة ملفات Gradle تلقائياً (`Gradle Sync`).
-   * وصّل هاتف أندرويد (Android 8.0+) أو شغّل محاكي Android Emulator، ثم اضغط **Run**.
-2. **تسجيل الدخول ومزامنة الخزينة المشفرة:**
-   * افتح تطبيق **ReWord** على الهاتف.
-   * أدخل الـ **Sync ID** وكلمة المرور الرئيسية ورابط الـ Worker (أو اتركه على الرابط الافتراضي).
-   * اضغط **"فتح الخزينة ومزامنتها"** ليتم جلب وفك تشفير الخزينة محلياً 100%.
-3. **تفعيل الملء التلقائي في كافة تطبيقات ومتصفحات الهاتف (Autofill Service):**
-   * انتقل إلى تبويب **الإعدادات (Settings)** داخل التطبيق.
-   * اضغط زر **"فتح إعدادات الملء التلقائي بالنظام"**.
-   * اختر **ReWord** كخدمة الملء التلقائي الافتراضية للجهاز.
-4. **الملء التلقائي الفوري والمصادقة بالبصمة (Biometrics):**
-   * عند فتح أي تطبيق (مثل Facebook, X, تطبيق البنك) أو متصفح ويب في الهاتف:
-   * اضغط على حقل اسم المستخدم أو كلمة المرور، ستظهر لك بطاقة ReWord الذكية.
-   * اختر حسابك، وأكّد العملية ببصمة الإصبع أو الوجه (`BiometricPrompt`) ليتم ملء البيانات فوراً!
+### 1. تثبيت التطبيق:
+* يمكنك تثبيت النسخة الجاهزة مباشرة عبر تحميل ملف [`ReWord.apk`](./ReWord.apk) المرفق في المستودع وتثبيته على هاتفك.
+* أو فتح مجلد `android` داخل **Android Studio** وتشغيل المشروع مباشرة (`Run 'app'`).
+
+### 2. تفعيل خدمة الملء التلقائي (Autofill Service):
+1. افتح تطبيق **ReWord** على هاتفك وسجل الدخول إلى خزينتك.
+2. انتقل إلى شاشة **الإعدادات (Settings)** داخل التطبيق.
+3. اضغط على **"فتح إعدادات الملء التلقائي بالنظام"**.
+4. حدد **ReWord** كخدمة الملء التلقائي الافتراضية للجهاز.
+
+### 🎯 سلوك الملء التلقائي الذكي الجديد:
+* يظهر التطبيق **فقط وحصرياً** عند الوقوف على:
+  * حقول **اسم المستخدم (Username)**
+  * حقول **البريد الإلكتروني (Email)**
+  * حقول **كلمات المرور (Password / PIN)**
+* **تم استبعاد حقول المحادثات والرسائل نهائياً:** لا يظهر التطبيق داخل رسائل واتساب، تلغرام، ماسنجر، خانات البحث، أو صناديق التعليقات.
+* دعم فتح الخزينة وتأكيد البيانات عبر البصمة البيومترية (`BiometricPrompt`) وشرائح اقتراحات لوحة مفاتيح جوجل (Gboard Inline Suggestions) في أندرويد 11 فما فوق.
 
 ---
 
 ## 📂 هيكل المشروع (Project Structure)
 
 ```text
-├── core.js                 # المحرك الأساسي (التشفير، IndexedDB، المزامنة، منطق الخزينة)
+├── core.js                 # محرك التشفير الرئيسي، IndexedDB، المزامنة، والاستيراد/التصدير
 ├── ui.js                   # واجهة المستخدم وتفاعلات القوائم والمودالات والبحث
-├── index.html              # الصفحة الرئيسية لتطبيق الويب (PWA)
+├── index.html              # صفحة تطبيق الويب والـ PWA
 ├── style.css               # الأنماط والتصميم الداكن المتجاوب
-├── sw.js                   # Service Worker للعمل أوفلاين كـ PWA
-├── manifest.json           # إعدادات تطبيق الويب التقدمي (PWA Manifest)
-├── icon.png                # أيقونة التطبيق الرسمية
+├── sw.js                   # Service Worker للتشغيل بدون إنترنت (PWA Offline)
+├── manifest.json           # إعدادات تطبيق الويب التقدمي
+├── icon.png                # أيقونة التطبيق الرئيسية
+├── repo-icon.svg           # شعار ReWord الرسمي الموجه
+├── ReWord.apk              # حزمة تطبيق أندرويد الجاهزة للتثبيت
 │
 ├── worker/
 │   └── index.js            # كود Cloudflare Worker لمعالجة المزامنة المشفرة
-├── wrangler.toml           # ملف إعدادات Wrangler وربط KV Namespace
+├── wrangler.toml           # ملف إعدادات النشر على Cloudflare
 │
-├── extension/              # إضافة جوجل كروم (Manifest V3)
+├── extension/              # إضافة متصفح كروم (Manifest V3)
 │   ├── manifest.json       # تعريف الإضافة والأذونات
-│   ├── background.js       # مشغل الخدمة في الخلفية (Session Cache, Sync, Auto-lock)
-│   ├── content.js          # سكربت الكشف والملء التلقائي داخل صفحات الويب
-│   ├── content.css         # أنماط الأيقونة والقائمة المنسدلة العائمة
-│   ├── crypto.js           # وحدة التشفير المتوافقة بنسبة 100% مع core.js
-│   ├── popup.html          # واجهة نافذة الإضافة السريعة
-│   ├── popup.js            # منطق واجهة الإضافة وتعبئة الصفحة النشطة بضغطة زر
-│   ├── popup.css           # أنماط الواجهة السريعة
-│   └── icons/              # أيقونات الإضافة بأحجامها المختلفة
+│   ├── background.js       # مشغل الخدمة في الخلفية والقفل التلقائي
+│   ├── content.js          # سكربت الكشف والملء التلقائي داخل المواقع
+│   ├── content.css         # أنماط زر الدرع والقائمة المنسدلة
+│   ├── crypto.js           # وحدة التشفير المطابقة لمحرك core.js
+│   ├── popup.html          # واجهة نافذة الإضافة المنبثقة
+│   ├── popup.js            # منطق واجهة الإضافة والتعبئة بضغطة زر
+│   └── icons/              # أيقونات الإضافة
 │
-├── android/                # تطبيق أندرويد الأصلي المتكامل (Native Kotlin & Jetpack Compose)
-│   ├── app/                # وحدة التطبيق (UI, Crypto, Service, Network, Model)
-│   ├── build.gradle.kts    # إعدادات بناء Gradle للمشروع
-│   └── README.md           # دليل تشغيل وتثبيت تطبيق الأندرويد
+├── android/                # تطبيق أندرويد الأصلي المتكامل (Kotlin & Jetpack Compose)
+│   ├── app/                # وحدات التطبيق البرمجية (Autofill, Crypto, Keystore, UI)
+│   ├── build.gradle.kts    # إعدادات بناء Gradle
+│   └── README.md           # دليل مخصص لمطوري تطبيق الأندرويد
 │
-├── ANDROID_AUTOFILL_PLAN.md# وثيقة وخطة تطبيق الأندرويد القادم (Autofill Service & Biometrics)
-├── knowledge.owl           # خريطة المعرفة والأنطولوجيا الرسمية للمشروع (OntoLink Graph)
+├── SEO.md                  # دليل وإعدادات الكلمات المفتاحية وتهيئة محركات البحث والذكاء الاصطناعي
 └── README.md               # الدليل الشامل والمفصل للمشروع
 ```
 
 ---
+---
 
-## 🚀 التثبيت والتشغيل المحلي (Getting Started)
+# 📖 English Documentation
 
-### 1. تشغيل موقع الويب محلياً:
-بما أن المشروع يعتمد على معايير الويب الصافية (Vanilla HTML/CSS/JS)، يمكنك تشغيله باستخدام أي خادم محلي:
+## 🌟 Overview
+
+**ReWord** is an open-source, client-side encrypted password manager and system autofill suite built strictly on the **Zero-Knowledge** architecture.
+
+It empowers you to host your own encrypted password vault for **$0 forever** using Cloudflare's serverless infrastructure without relying on proprietary third-party servers:
+* **Web App (PWA):** Offline-first Progressive Web App deployable to **Cloudflare Pages**.
+* **Encrypted Vault Sync Backend:** Lightweight serverless API powered by **Cloudflare Workers & KV**.
+* **Browser Extension (Chrome Manifest V3):** Intelligent login detection and one-click in-page credential autofill.
+* **Native Android App (Kotlin & Jetpack Compose):** System-wide Autofill Service with precise targeting for username, email, and password fields, backed by hardware-level biometric authentication (`BiometricPrompt` & `Android Keystore`).
+
+> [!IMPORTANT]
+> **Zero-Knowledge Guarantee:**
+> Your master password and decrypted records never leave your device. All encryption and decryption operations occur 100% on the client side using the standard `Web Crypto API` (Web & Extension) and `javax.crypto.Cipher` (Android). Cloudflare only stores opaque, authenticated ciphertext blobs.
+
+---
+
+## ✨ Key Features
+
+* 🔐 **Military-Grade Cryptography:**
+  * **AES-256-GCM** symmetric encryption with unique 32-byte salt and random 12-byte IV for every write.
+  * **PBKDF2 with SHA-256 (310,000 iterations)** key derivation, complying with OWASP password storage standards.
+  * Deterministic zero-leak sync identifiers generated via SHA-256 (`reword:v1:${syncId}`).
+
+* 🔄 **Comprehensive Password Import & Export:**
+  * **Browser CSV Import:** Seamlessly import existing credentials from **Google Chrome**, **Microsoft Edge**, **Mozilla Firefox**, and **Apple Safari**.
+  * **Password Manager Migration:** Compatible with standard CSV exports from **Bitwarden**, **1Password**, and **LastPass**.
+  * **Encrypted Vault Backup (`.reword` / `.json`):** Full backup and restore across devices with local cryptographic validation.
+  * **Excel XLSX Export:** Export styled, color-coded password sheets generated entirely in pure OpenXML with zero external library overhead.
+  * **Standard CSV Export:** Export clean CSV tables on demand.
+
+* 📱 **Native Android Application:**
+  * Native Kotlin implementation with modern **Jetpack Compose (Material 3)**.
+  * **Android Autofill Framework Service:** Detects and fills credentials in all mobile apps and browsers.
+  * **Strict Field Targeting:** Only triggers on **Username**, **Email Address**, and **Password / PIN** fields. Chat apps (e.g. WhatsApp, Telegram), search inputs, and comment fields are strictly excluded.
+  * Hardware-backed biometric authentication (Fingerprint / Face ID) and Gboard inline keyboard suggestions on Android 11+.
+
+* ⚡ **Manifest V3 Chrome Extension:**
+  * Real-time 5-layer visibility detector preventing ghost icons.
+  * Floating badge and in-field dropdown matching current domain credentials.
+  * Auto-lock timer and inactive sleep management to save battery and memory.
+
+* ☁️ **Self-Hosted on Cloudflare (Zero Cost):**
+  * Deploy web interface to **Cloudflare Pages**.
+  * Deploy serverless sync to **Cloudflare Workers & KV** (100,000 requests/day free tier).
+
+---
+
+## 📥 Supported Password Import Formats
+
+| Source / Format | File Type | Recognized Columns / Headers |
+| :--- | :---: | :--- |
+| **ReWord Encrypted Vault** | `.reword` / `.json` | Full vault structure with multi-account records, notes, and metadata |
+| **Google Chrome** | `.csv` | `name`, `url`, `username`, `password` |
+| **Microsoft Edge** | `.csv` | `name`, `url`, `username`, `password` |
+| **Mozilla Firefox** | `.csv` | `url`, `username`, `password`, `httpRealm`, `formActionOrigin` |
+| **Apple Safari** | `.csv` | `Title`, `URL`, `User Name`, `Password` |
+| **Bitwarden** | `.csv` | `folder`, `favorite`, `type`, `name`, `notes`, `login_uri`, `login_username`, `login_password` |
+| **Generic Password CSV** | `.csv` | Any file containing URL/Origin, Username/Login/Email, and Password columns |
+
+---
+
+## 🚀 Step-by-Step Cloudflare Deployment Guide
+
+### Step 1: Download the Repository
+
+* **Via Git:**
+  ```bash
+  git clone https://github.com/<your-username>/reword-app.git
+  cd reword-app
+  ```
+* **Or via ZIP:**
+  * Click the green **Code** button on GitHub and choose **Download ZIP**.
+  * Extract the archive to any folder on your machine.
+
+---
+
+### Step 2: Deploy Frontend to Cloudflare Pages (Web App)
+
+#### Option A: Via Cloudflare Dashboard (Recommended, No CLI needed)
+1. Sign in to your [Cloudflare Dashboard](https://dash.cloudflare.com/).
+2. In the sidebar, navigate to **Compute (Workers & Pages)** ➡️ Click **Create application**.
+3. Select the **Pages** tab:
+   * **Connect to Git:** Link your GitHub account and select your `reword-app` repo.
+     * Framework preset: `None`
+     * Build command: *(leave empty)*
+     * Build output directory: `.` *(root)*
+     * Click **Save and Deploy**.
+   * **Or Direct Upload:**
+     * Name your project (e.g., `reword-vault`).
+     * Drag and drop the repository folder (containing `index.html`, `core.js`, `style.css`, `sw.js`, `manifest.json`).
+     * Click **Deploy site**.
+4. Your application will be live immediately at `https://<your-project>.pages.dev`.
+
+#### Option B: Via Wrangler CLI
 ```bash
-npx serve .
-# أو
-python -m http.server 8080
-```
-افتح المتصفح على `http://localhost:8080`.
-
----
-
-### 2. تثبيت إضافة كروم (Chrome Extension):
-1. افتح متصفح Chrome أو أي متصفح مبني على Chromium (Edge, Brave, Opera).
-2. ادخل إلى الرابط: `chrome://extensions/`.
-3. قم بتفعيل **Developer Mode** (وضع المطور) من الزاوية العلوية.
-4. اضغط على **Load unpacked** (تحميل حزمة غير مضغوطة).
-5. اختر مجلد `extension` من داخل مسار هذا المشروع.
-6. افتح الإضافة، أدخل الـ Sync ID وكلمة المرور لفك التشفير وابدأ بالملء التلقائي في أي موقع!
-
----
-
-### 3. إعداد ونشر خادم المزامنة الخاص بك مجاناً على Cloudflare (Self-Hosted Worker):
-
-> [!TIP]
-> **لماذا المزامنة عبر حسابك الخاص؟ (Bring Your Own Backend)**
-> حرصاً على خصوصيتك وأمان بياناتك بنسبة 100%، ولتجنب حفظ خزينتك على أي خادم مركزي يتبع لأي طرف ثالث، صُمم ReWord ليعمل عبر **Cloudflare Worker مجاني تنشئه على حسابك الشخصي**. 
-> باقة Cloudflare المجانية تمنحك **100,000 طلب يومياً و 1 جيجابايت مساحة تخزين مجاناً مدى الحياة وبدون أي بطاقة بنكية**، وهي كافية لمزامنة بياناتك لسنوات طويلة بتكلفة **0$**!
-
-#### 🛠️ الطريقة الأولى: عبر لوحة تحكم Cloudflare (سهلة وبدون سطر أوامر - للمستخدم العادي):
-1. **إنشاء حساب مجاني:** ادخل إلى [Cloudflare.com](https://dash.cloudflare.com/sign-up) وسجّل حساباً جديداً مجاناً.
-2. **إنشاء قاعدة بيانات KV:**
-   * من القائمة الجانبية في لوحة التحكم، اختر **Storage & Databases** ⬅ ثم **KV**.
-   * اضغط على زر **Create namespace** واكتب الاسم: `vaults` ثم اضغط Add.
-3. **إنشاء دالة الـ Worker:**
-   * من القائمة الجانبية، اختر **Compute (Workers & Pages)** ⬅ ثم **Create application** ⬅ اختر تبويب **Workers** ثم **Create Worker**.
-   * أعطه اسماً مثل `reword-sync` واضغط **Deploy**.
-4. **وضع كود المزامنة:**
-   * اضغط على زر **Edit code** داخل صفحة الـ Worker الذي أنشأته.
-   * احذف أي كود تجريبي موجود في المحرر، وانسخ كود ملف [`worker/index.js`](./worker/index.js) بالكامل من هذا المستودع والصقه بدلاً منه.
-   * اضغط على **Save and deploy** (حفظ ونشر).
-5. **ربط قاعدة بيانات الـ KV بالوركر (خطوة هامة جداً):**
-   * ارجع لصفحة إعدادات الوركر ⬅ اضغط على تبويب **Settings** ⬅ ثم **Bindings** (أو Variables and Secrets).
-   * تحت قسم **KV Namespace Bindings**، اضغط **Add**.
-   * في خانة **Variable name** اكتب بدقة بأحرف كبيرة: `VAULTS`.
-   * في خانة **KV namespace** اختر قاعدة البيانات التي أنشأتها: `vaults`.
-   * اضغط **Save and deploy**.
-6. **الحصول على الرابط واستخدامه:**
-   * انسخ رابط الوركر الخاص بك الظاهر أعلى الصفحة (مثال: `https://reword-sync.yourname.workers.dev`).
-   * ضعه في خانة **Worker URL** في:
-     * موقع الويب (ReWord Web App)
-     * إضافة المتصفح (Chrome Extension)
-     * تطبيق الأندرويد (Android App)
-   * خزينتك الآن تتزامن سحابياً ومشفرة بالكامل بين كافة أجهزتك عبر سيرفرك الخاص مجاناً!
-
----
-
-#### 💻 الطريقة الثانية: عبر سطر الأوامر Wrangler CLI (للمطورين):
-```bash
-# 1. تثبيت الحزم وتسجيل الدخول إلى حسابك في كلاودفلير
-npm install
 npx wrangler login
+npx wrangler pages deploy . --project-name=reword-vault
+```
 
-# 2. إنشاء الـ KV Namespace
+---
+
+### Step 3: Deploy Vault Sync Backend to Cloudflare Workers & KV
+
+#### Option A: Via Cloudflare Dashboard
+1. **Create the KV Namespace:**
+   * Go to **Storage & Databases** ➡️ **KV**.
+   * Click **Create namespace**, enter the name `vaults`, and click **Add**.
+2. **Create the Worker:**
+   * Go to **Compute (Workers & Pages)** ➡️ **Create application** ➡️ **Workers** ➡️ **Create Worker**.
+   * Name your worker (e.g., `reword-sync`) and click **Deploy**.
+3. **Paste Worker Code:**
+   * Click **Edit code** on the worker page.
+   * Replace the default code with the full content of [`worker/index.js`](./worker/index.js).
+   * Click **Save and deploy**.
+4. **Bind the KV Namespace to Worker (Important):**
+   * Go back to the worker page ➡️ **Settings** ➡️ **Bindings** (or **Variables and Secrets**).
+   * Under **KV Namespace Bindings**, click **Add**.
+   * Set **Variable name** to: `VAULTS` (must be uppercase).
+   * Select your KV namespace: `vaults`.
+   * Click **Save and deploy**.
+5. Copy your worker endpoint URL (e.g., `https://reword-sync.<subdomain>.workers.dev`).
+
+#### Option B: Via Wrangler CLI
+```bash
+# 1. Create the KV Namespace
 npx wrangler kv namespace create vaults
 
-# 3. انسخ المعرّف (id) الناتج وضعه داخل ملف wrangler.toml في حقل id
+# 2. Add the generated KV ID to your wrangler.toml:
 # [[kv_namespaces]]
 # binding = "VAULTS"
-# id = "ضع_الـ_ID_الناتج_هنا"
+# id = "<YOUR_GENERATED_KV_ID>"
 
-# 4. نشر الوركر فوراً
+# 3. Deploy the worker
 npx wrangler deploy
 ```
-بعد اكتمال النشر، سيظهر لك الرابط النهائي للوركر في الطرفية، انسخه واستخدمه في التطبيقات.
 
 ---
 
-### 4. بناء وتشغيل تطبيق أندرويد (Android Studio):
-1. افتح مجلد `android` باستخدام **Android Studio** (نسخة Iguana أو Koala أو أحدث).
-2. سيقوم Android Studio بمزامنة حزم Gradle تلقائياً (`Gradle Sync`).
-3. اختر محاكي (Emulator) أو هاتف أندرويد حقيقي يعمل بنظام Android 8.0 (API 26) فما فوق.
-4. اضغط على زر **Run 'app'** (أو اختصار `Shift + F10`).
-5. راجع الدليل المخصص في [`android/README.md`](./android/README.md) لمزيد من التفاصيل.
+### Step 4: Connect Your Devices
+
+1. Open your deployed Cloudflare Pages URL (or local instance).
+2. Click **Create New Vault**, choose a strong Master Password, set a custom **Sync ID**, and paste your **Worker URL**.
+3. Open the Chrome Extension and Android App, enter the same **Sync ID**, Master Password, and Worker URL to start syncing instantly across all your devices.
 
 ---
 
-## 📱 تطبيق أندرويد الأصلي والملء التلقائي للنظام (Native Android App & System-Wide Autofill)
+## 🧩 Chrome Extension Installation
 
-تمت إضافة تطبيق أندرويد أصلي (Native) متكامل مكتوب بلغة **Kotlin** مع أحدث واجهات **Jetpack Compose (Material 3)**، ليوفر تجربة أمان وملء تلقائي شاملة على الهواتف الذكية:
-
-<p align="center">
-  <img src="android/app_running_screenshot.png" width="300" alt="ReWord Android App Screenshot" />
-</p>
-
-### 🌟 أبرز مميزات تطبيق الأندرويد (v1.2.0):
-1. **الملء التلقائي الشامل للنظام (Android Autofill Framework):**
-   * خدمة `ReWordAutofillService` القياسية المتوافقة مع أندرويد 8.0 فما فوق.
-   * التعرف التلقائي الذكي على حقول اسم المستخدم، والبريد الإلكتروني، وكلمات المرور باللغتين العربية والإنجليزية في **كافة التطبيقات** (تطبيقات البنوك والتسوق والتواصل) وفي **جميع متصفحات الهواتف**.
-   * قائمة منسدلة فورية تظهر ملاصقة لحقول الإدخال لتعبئة الحساب المختار بلمسة واحدة وتختفي تلقائياً بمجرد الانتهاء.
-
-2. **التكامل مع كيبورد جوجل (Gboard Inline Suggestions):**
-   * في الهواتف التي تعمل بنظام أندرويد 11 فما فوق، تظهر شريحة اقتراح الحساب مع أيقونة ReWord مباشرة داخل شريط اقتراحات لوحة المفاتيح (Gboard) لتعبئة البيانات دون حجب أي جزء من الشاشة.
-
-3. **المصادقة البيومترية والأمان العتادي (Biometrics & Android Keystore):**
-   * فتح الخزينة وتأكيد عمليات الملء التلقائي باستخدام **بصمة الإصبع أو بصمة الوجه (Fingerprint / Face ID)** عبر `BiometricPrompt`.
-   * تشفير وحماية مفتاح فك التشفير بواسطة عتاد الهاتف المشفر **Android Keystore (Hardware-backed)** لضمان أقصى درجات الحماية.
-
-4. **تطابق تشفيري 100% مع الويب والإضافة (`core.js`):**
-   * اشتقاق المفاتيح بخوارزمية **PBKDF2 مع HMAC-SHA256 بـ 310,000 دورة تكرار** ونفس حجم الـ Salt (32 بايت).
-   * تشفير متماثل **AES-256-GCM** مع علامة مصادقة 128-bit و IV عشوائي (12 بايت) لكل عملية حفظ.
-   * إمكانية فتح ومزامنة نفس الخزينة بين موقع الويب، وإضافة كروم، وتطبيق الأندرويد بسلاسة وأمان تام.
-
-5. **أمان معتمد 100% ومتوافق مع Google Play Protect:**
-   * التطبيق يعتمد كلياً على خدمة الملء التلقائي الرسمية للنظام بدون طلب أي أذونات خطرة مثل إمكانية الوصول (Accessibility) أو الظهور الدائم فوق التطبيقات (Overlay)، مما يضمن عدم ظهور أي تحذيرات أمان ويوفر استهلاك البطارية.
-
-6. **واجهة مستخدم عصرية وأنيقة (Jetpack Compose & Material 3):**
-   * خط عربي محلي أنيق **Alexandria** مع فرض اتجاه القراءة من اليمين إلى اليسار (RTL) ودعم سلس للنصوص والرموز الإنجليزية.
-   * أزرار تصفية سريعة للمجموعات والتصنيفات (Tag Filtering Chips) في أعلى الشاشة للتنقل السريع بين الحسابات.
-   * نافذة اختيار الحسابات التلقائية عند عدم تطابق حزمة التطبيق لتمكينك من اختيار أي حساب وملئه فوراً.
-   * أيقونات وألوان المواقع الحقيقية (Favicons) مستنسخة من الويب مع رسوم متحركة سلسة لفتح وغلق البطاقات وقوائم الحسابات.
+1. Open Google Chrome and navigate to `chrome://extensions/`.
+2. Enable **Developer mode** toggle in the top-right corner.
+3. Click **Load unpacked** and select the `extension` folder from this repository.
+4. Pin the ReWord shield icon 📌 in your browser toolbar, enter your vault credentials, and enjoy instant autofill on any login screen.
 
 ---
 
-## 🗺️ خريطة الأنطولوجيا وخطة التطوير (Roadmap & Ontology)
+## 📱 Android Application & Autofill Service
 
-المشروع مسجل ومنظم بالكامل عبر نظام **OntoLink** المعرفي في [`knowledge.owl`](./knowledge.owl).
-
-### 📱 مهمة أندرويد والملء التلقائي (Android Autofill & Biometrics):
-* [x] **توثيق الخطة التقنية:** [`ANDROID_AUTOFILL_PLAN.md`](./ANDROID_AUTOFILL_PLAN.md).
-* [x] **`task-android-setup`:** إعداد مشروع أندرويد (Kotlin / Jetpack Compose).
-* [x] **`task-android-crypto`:** تشفير AES-256-GCM و PBKDF2 على أندرويد ومزامنة الـ Worker.
-* [x] **`task-android-autofill`:** برمجة `AutofillService` لنظام أندرويد للملء في كل التطبيقات والمواقع.
-* [x] **`task-android-biometrics`:** تكامل التحقق ببصمة الإصبع أو الوجه (`BiometricPrompt` + Keystore).
-* [x] **`task-android-ui-sync`:** بناء واجهات إدخال الـ Sync ID والربط السحابي والزر العائم والخطوط المحلية.
-
-> [!NOTE]
-> 🎉 **تم إنجاز تطبيق الأندرويد وإضافة المتصفح v1.1.1 بنجاح تام!** يتوفر التطبيق الأصلي كاملاً الآن في مجلد [`android/`](./android) مع دعم الـ Autofill Service الشامل، والزر العائم، والمصادقة البيومترية (BiometricPrompt)، وتشفير متطابق بنسبة 100% مع الويب وإضافة كروم.
+1. **Install APK:**
+   * Download the ready-to-use [`ReWord.apk`](./ReWord.apk) directly onto your phone and tap to install.
+   * Or open the `android` folder in **Android Studio** and click **Run**.
+2. **Enable Autofill Service:**
+   * Open ReWord on your phone and unlock your vault.
+   * Go to **Settings** and tap **Open System Autofill Settings**.
+   * Select **ReWord** as your phone's default Autofill service.
+3. **Refined Behavior:**
+   * Automatically presents credentials on **Username**, **Email**, and **Password** fields.
+   * Completely ignores chat messaging fields (WhatsApp, Telegram, etc.) and search inputs.
+   * Supports biometric fingerprint / face unlock and Gboard inline suggestions.
 
 ---
 
-## 🔒 ترخيص الاستخدام (License)
-هذا المشروع مرخص تحت رخصة **MIT** - راجع ملف [LICENSE](LICENSE) لمزيد من التفاصيل.
+## 🔒 Security & Cryptography Model
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as User
+    participant Client as Client (Web / Extension / Android)
+    participant Crypto as Cryptographic Engine (Web Crypto API / Cipher)
+    participant Worker as Cloudflare Worker & KV
+
+    User->>Client: Enters Master Password
+    Client->>Crypto: Derive 256-bit Key (PBKDF2 x 310,000 + SHA-256 + 32-byte Salt)
+    Crypto-->>Client: Symmetric Encryption Key
+    Client->>Crypto: Encrypt Vault Data (AES-256-GCM + Random 12-byte IV)
+    Crypto-->>Client: Ciphertext Blob
+    Client->>Worker: POST /vault (Sends only Ciphertext Blob & SHA-256 Hashed Sync ID)
+    Note over Worker: Worker & KV store ciphertext only. No access to keys or decrypted data!
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
