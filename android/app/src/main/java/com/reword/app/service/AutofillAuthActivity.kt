@@ -6,16 +6,17 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.service.autofill.Dataset
+import android.view.View
+import android.view.WindowManager
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillManager
 import android.view.autofill.AutofillValue
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.RemoteViews
-import android.widget.Toast
+import android.widget.*
+import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.*
 import com.google.gson.Gson
 import com.reword.app.R
 import com.reword.app.crypto.CryptoEngine
@@ -24,14 +25,34 @@ import com.reword.app.crypto.SecureStorage
 import com.reword.app.model.Account
 import com.reword.app.model.Site
 import com.reword.app.model.Vault
-import java.net.URI
+import kotlinx.coroutines.*
 
-/**
- * Trampoline Activity to prompt for Biometric Authentication or Master Password
- * when an Autofill request is triggered while the vault is locked.
- */
+/** Retains ongoing decryption across rotation without blocking the UI thread. */
+class AutofillUnlockModel : ViewModel() {
+    data class Unlocked(val vault: Vault, val password: String)
+    val result = MutableLiveData<Result<Unlocked>?>()
+    var running = false
+        private set
+    var biometricInProgress = false
+
+    fun unlock(blob: String, password: String) {
+        if (running) return
+        result.value = null
+        running = true
+        viewModelScope.launch {
+            val unlocked = try {
+                Result.success(withContext(Dispatchers.Default) {
+                    Unlocked(requireNotNull(Gson().fromJson(CryptoEngine.decrypt(blob, password), Vault::class.java)), password)
+                })
+            } catch (e: CancellationException) { throw e }
+            catch (e: Exception) { Result.failure(e) }
+            running = false
+            result.value = unlocked
+        }
+    }
+}
+
 class AutofillAuthActivity : FragmentActivity() {
-
     companion object {
         const val EXTRA_DOMAIN = "extra_domain"
         const val EXTRA_PACKAGE = "extra_package"
@@ -40,251 +61,188 @@ class AutofillAuthActivity : FragmentActivity() {
     }
 
     private lateinit var storage: SecureStorage
-    private val gson = Gson()
+    private lateinit var model: AutofillUnlockModel
+    private lateinit var biometricPrompt: BiometricPrompt
+    private var dialog: AlertDialog? = null
+    private var phase = "initial"
+    private var userField: AutofillId? = null
+    private var passField: AutofillId? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        storage = SecureStorage(this)
-
-        if (storage.isBiometricEnabled && storage.getBiometricIv() != null) {
-            triggerBiometricPrompt()
-        } else {
-            showMasterPasswordDialog()
-        }
-    }
-
-    private fun triggerBiometricPrompt() {
-        val iv = storage.getBiometricIv()
-        val encryptedPassBytes = storage.getBiometricEncryptedPassword()
-
-        if (iv == null || encryptedPassBytes == null) {
-            showMasterPasswordDialog()
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        setResult(Activity.RESULT_CANCELED)
+        userField = fieldExtra(EXTRA_USER_FIELD)
+        passField = fieldExtra(EXTRA_PASS_FIELD)
+        if (userField == null && passField == null) { finish(); return }
+        try { storage = SecureStorage(this) } catch (_: Exception) {
+            Toast.makeText(this, "تعذر فتح التخزين الآمن. افتح ReWord وحاول مرة أخرى", Toast.LENGTH_LONG).show()
+            finish()
             return
         }
-
-        val executor = ContextCompat.getMainExecutor(this)
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(getString(R.string.biometric_prompt_title))
-            .setSubtitle(getString(R.string.biometric_prompt_subtitle))
-            .setNegativeButtonText(getString(R.string.biometric_prompt_cancel))
-            .build()
-
-        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+        model = ViewModelProvider(this)[AutofillUnlockModel::class.java]
+        phase = savedInstanceState?.getString("phase") ?: "initial"
+        // Reconnect callbacks on recreation; AndroidX retains the active biometric prompt.
+        biometricPrompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this), object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
+                model.biometricInProgress = false
+                if (isFinishing || isDestroyed) return
                 try {
-                    val cipher = result.cryptoObject?.cipher
-                    val decryptedPassBytes = cipher?.doFinal(encryptedPassBytes)
-                    val masterPassword = decryptedPassBytes?.let { String(it, Charsets.UTF_8) }
-
-                    if (!masterPassword.isNullOrBlank()) {
-                        unlockAndReturnDataset(masterPassword)
-                    } else {
-                        showMasterPasswordDialog()
-                    }
-                } catch (_: Exception) {
-                    showMasterPasswordDialog()
-                }
+                    val encrypted = storage.getBiometricEncryptedPassword() ?: error("Missing biometric data")
+                    val cipher = result.cryptoObject?.cipher ?: error("Missing cipher")
+                    unlock(cipher.doFinal(encrypted).toString(Charsets.UTF_8))
+                } catch (_: Exception) { showMasterPasswordDialog() }
             }
-
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON || errorCode == BiometricPrompt.ERROR_USER_CANCELED) {
-                    setResult(Activity.RESULT_CANCELED)
-                    finish()
-                } else {
-                    showMasterPasswordDialog()
+                model.biometricInProgress = false
+                if (isFinishing || isDestroyed) return
+                when (errorCode) {
+                    BiometricPrompt.ERROR_USER_CANCELED, BiometricPrompt.ERROR_CANCELED -> finish()
+                    else -> showMasterPasswordDialog()
                 }
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                Toast.makeText(this@AutofillAuthActivity, "فشل التحقق من البصمة", Toast.LENGTH_SHORT).show()
             }
         })
+        model.result.observe(this) { outcome ->
+            if (outcome == null) return@observe
+            dialog?.dismiss()
+            outcome.fold(onSuccess = {
+                SecureStorage.setSession(it.vault, it.password)
+                chooseAccount(it.vault)
+            }, onFailure = {
+                Toast.makeText(this, "تعذر فتح الخزنة. تأكد من كلمة المرور الرئيسية", Toast.LENGTH_LONG).show()
+                showMasterPasswordDialog()
+            })
+        }
+        if (model.result.value != null) return
+        if (model.running) { showProgress(); return }
+        val vault = SecureStorage.activeVault
+        if (vault != null) { chooseAccount(vault); return }
+        if (phase == "biometric" && model.biometricInProgress) return
+        if (phase == "password") showMasterPasswordDialog() else startBiometric()
+    }
 
+    private fun fieldExtra(name: String): AutofillId? = if (Build.VERSION.SDK_INT >= 33) {
+        intent.getParcelableExtra(name, AutofillId::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        intent.getParcelableExtra(name)
+    }
+
+    private fun startBiometric() {
         try {
-            val cryptoObject = KeystoreHelper.createDecryptCryptoObject(iv)
-            biometricPrompt.authenticate(promptInfo, cryptoObject)
+            val iv = storage.getBiometricIv()
+            if (!storage.isBiometricEnabled || iv == null || storage.getBiometricEncryptedPassword() == null ||
+                BiometricManager.from(this).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) != BiometricManager.BIOMETRIC_SUCCESS) {
+                showMasterPasswordDialog()
+                return
+            }
+            val crypto = KeystoreHelper.createDecryptCryptoObject(iv)
+            val info = BiometricPrompt.PromptInfo.Builder()
+                .setTitle(getString(R.string.biometric_prompt_title))
+                .setSubtitle(getString(R.string.biometric_prompt_subtitle))
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+                .setNegativeButtonText("استخدام كلمة المرور")
+                .build()
+            phase = "biometric"
+            model.biometricInProgress = true
+            biometricPrompt.authenticate(info, crypto)
         } catch (_: Exception) {
+            model.biometricInProgress = false
             showMasterPasswordDialog()
         }
     }
 
     private fun showMasterPasswordDialog() {
+        if (isFinishing || isDestroyed) return
+        phase = "password"
+        dialog?.dismiss()
         val input = EditText(this).apply {
             hint = getString(R.string.master_password_label)
             inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+            importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
         }
-
         val container = FrameLayout(this).apply {
-            val paddingPx = (18 * resources.displayMetrics.density).toInt()
-            setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+            val padding = (18 * resources.displayMetrics.density).toInt()
+            setPadding(padding, padding, padding, padding)
             addView(input)
         }
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.app_name)
-            .setMessage("أدخل كلمة المرور الرئيسية لإلغاء القفل")
-            .setView(container)
-            .setPositiveButton("فتح") { _, _ ->
-                val pwd = input.text?.toString().orEmpty()
-                if (pwd.isNotBlank()) {
-                    unlockAndReturnDataset(pwd)
-                } else {
-                    setResult(Activity.RESULT_CANCELED)
-                    finish()
-                }
+        dialog = AlertDialog.Builder(this)
+            .setTitle(R.string.app_name).setMessage("أدخل كلمة المرور الرئيسية لفتح الخزنة")
+            .setView(container).setPositiveButton("فتح", null)
+            .setNegativeButton(R.string.biometric_prompt_cancel) { _, _ -> finish() }
+            .setOnCancelListener { finish() }.create()
+        dialog?.setOnShowListener {
+            dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+                val password = input.text.toString()
+                if (password.isBlank()) input.error = "أدخل كلمة المرور" else unlock(password)
             }
-            .setNegativeButton(R.string.biometric_prompt_cancel) { _, _ ->
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-            .setOnCancelListener {
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-            .show()
+        }
+        dialog?.show()
     }
 
-    private fun unlockAndReturnDataset(password: String) {
+    private fun showProgress() {
+        phase = "unlocking"
+        dialog?.dismiss()
+        dialog = AlertDialog.Builder(this).setTitle(R.string.app_name)
+            .setMessage("جارٍ فتح الخزنة…").setView(ProgressBar(this))
+            .setNegativeButton(R.string.biometric_prompt_cancel) { _, _ -> finish() }
+            .setOnCancelListener { finish() }.show()
+    }
+
+    private fun unlock(password: String) {
         val blob = storage.vaultBlob
         if (blob == null) {
-            Toast.makeText(this, "الخزينة فارغة", Toast.LENGTH_SHORT).show()
-            setResult(Activity.RESULT_CANCELED)
+            Toast.makeText(this, "افتح ReWord وزامن الخزنة أولاً", Toast.LENGTH_LONG).show()
             finish()
             return
         }
-
-        try {
-            val json = CryptoEngine.decrypt(blob, password)
-            val vault = gson.fromJson(json, Vault::class.java)
-            SecureStorage.setSession(vault, password)
-
-            val domain = intent.getStringExtra(EXTRA_DOMAIN)
-            val pkg = intent.getStringExtra(EXTRA_PACKAGE)
-
-            val userField: AutofillId? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(EXTRA_USER_FIELD, AutofillId::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                intent.getParcelableExtra(EXTRA_USER_FIELD) as? AutofillId
-            }
-
-            val passField: AutofillId? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(EXTRA_PASS_FIELD, AutofillId::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                intent.getParcelableExtra(EXTRA_PASS_FIELD) as? AutofillId
-            }
-
-            val match = findBestAccount(vault, domain, pkg)
-            if (match != null && (userField != null || passField != null)) {
-                returnDataset(match.first, match.second, userField, passField)
-            } else if (vault.sites.isNotEmpty()) {
-                showAccountChooser(vault, userField, passField)
-            } else {
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "كلمة المرور غير صحيحة", Toast.LENGTH_SHORT).show()
-            setResult(Activity.RESULT_CANCELED)
-            finish()
-        }
+        showProgress()
+        model.unlock(blob, password)
     }
 
-    private fun showAccountChooser(
-        vault: Vault,
-        userField: AutofillId?,
-        passField: AutofillId?
-    ) {
-        val items = mutableListOf<Pair<Site, Account>>()
-        val displayLabels = mutableListOf<String>()
-
-        for (site in vault.sites) {
-            for (acc in site.accounts) {
-                items.add(Pair(site, acc))
-                val title = site.name.ifBlank { site.url }
-                displayLabels.add("$title (${acc.user})")
-            }
-        }
-
+    private fun chooseAccount(vault: Vault) {
+        if (isFinishing || isDestroyed) return
+        phase = "chooser"
+        val matches = AutofillSiteMatcher.find(vault, intent.getStringExtra(EXTRA_DOMAIN), intent.getStringExtra(EXTRA_PACKAGE))
+        val items = (matches.ifEmpty { vault.sites }).flatMap { site -> site.accounts.map { site to it } }
         if (items.isEmpty()) {
-            Toast.makeText(this, "لا توجد حسابات مسجلة في الخزينة", Toast.LENGTH_SHORT).show()
-            setResult(Activity.RESULT_CANCELED)
+            Toast.makeText(this, "لا توجد حسابات مسجلة في الخزنة", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
-
-        AlertDialog.Builder(this)
-            .setTitle("اختر الحساب للملء التلقائي")
-            .setItems(displayLabels.toTypedArray()) { _, which ->
-                val selected = items[which]
-                returnDataset(selected.first, selected.second, userField, passField)
-            }
-            .setNegativeButton(R.string.biometric_prompt_cancel) { _, _ ->
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-            .setOnCancelListener {
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-            .show()
+        // Do not silently choose the first account when several accounts match.
+        if (matches.isNotEmpty() && items.size == 1) {
+            returnDataset(items.first().first, items.first().second)
+            return
+        }
+        dialog?.dismiss()
+        dialog = AlertDialog.Builder(this).setTitle("اختر الحساب للملء التلقائي")
+            .setItems(items.map { (site, account) -> "${site.name.ifBlank { site.url }} (${account.user})" }.toTypedArray()) { _, which ->
+                returnDataset(items[which].first, items[which].second)
+            }.setNegativeButton(R.string.biometric_prompt_cancel) { _, _ -> finish() }
+            .setOnCancelListener { finish() }.show()
     }
 
-    private fun returnDataset(
-        site: Site,
-        acc: Account,
-        userField: AutofillId?,
-        passField: AutofillId?
-    ) {
-        val presentation = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
+    private fun returnDataset(site: Site, account: Account) {
+        val menu = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
             setTextViewText(R.id.autofill_title, site.name.ifBlank { site.url })
-            setTextViewText(R.id.autofill_subtitle, acc.user)
+            setTextViewText(R.id.autofill_subtitle, account.user)
         }
-
-        val builder = Dataset.Builder(presentation)
-        userField?.let { builder.setValue(it, AutofillValue.forText(acc.user), presentation) }
-        passField?.let { builder.setValue(it, AutofillValue.forText(acc.pass), presentation) }
-
-        val replyIntent = Intent().apply {
-            putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, builder.build())
-        }
-        setResult(Activity.RESULT_OK, replyIntent)
+        val builder = Dataset.Builder(menu)
+        userField?.let { builder.setValue(it, AutofillValue.forText(account.user), menu) }
+        passField?.let { builder.setValue(it, AutofillValue.forText(account.pass), menu) }
+        setResult(Activity.RESULT_OK, Intent().putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, builder.build()))
         finish()
     }
 
-    private fun findBestAccount(vault: Vault, domain: String?, pkg: String?): Pair<Site, Account>? {
-        val cleanDomain = domain?.let { extractHost(it) }?.lowercase()
-        val cleanPkg = pkg?.lowercase()
-
-        for (site in vault.sites) {
-            val siteHost = extractHost(site.url).lowercase()
-            val siteName = site.name.lowercase()
-
-            val matchesDomain = cleanDomain != null && siteHost.isNotEmpty() &&
-                    (cleanDomain.contains(siteHost) || siteHost.contains(cleanDomain))
-            val matchesPkg = cleanPkg != null &&
-                    ((siteName.isNotEmpty() && cleanPkg.contains(siteName)) ||
-                            (siteHost.isNotEmpty() && cleanPkg.contains(siteHost.split(".").firstOrNull() ?: "")))
-
-            if (matchesDomain || matchesPkg) {
-                val acc = site.accounts.firstOrNull()
-                if (acc != null) return Pair(site, acc)
-            }
-        }
-        return null
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("phase", phase)
+        super.onSaveInstanceState(outState)
     }
 
-    private fun extractHost(raw: String): String {
-        return try {
-            val url = if (!raw.contains("://")) "https://$raw" else raw
-            val host = URI(url).host ?: raw
-            host.removePrefix("www.")
-        } catch (_: Exception) {
-            raw.removePrefix("www.")
-        }
+    override fun onDestroy() {
+        dialog?.dismiss()
+        dialog = null
+        super.onDestroy()
     }
 }

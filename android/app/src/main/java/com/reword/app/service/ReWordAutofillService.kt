@@ -3,395 +3,183 @@ package com.reword.app.service
 import android.app.PendingIntent
 import android.app.assist.AssistStructure
 import android.content.Intent
-import android.content.IntentSender
+import android.net.Uri
 import android.os.Build
 import android.os.CancellationSignal
-import android.service.autofill.AutofillService
-import android.service.autofill.Dataset
-import android.service.autofill.FillCallback
-import android.service.autofill.FillContext
-import android.service.autofill.FillRequest
-import android.service.autofill.FillResponse
-import android.service.autofill.SaveCallback
-import android.service.autofill.SaveInfo
-import android.service.autofill.SaveRequest
-import android.text.InputType
-import android.view.View
+import android.service.autofill.*
+import android.util.Log
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
 import android.widget.RemoteViews
+import androidx.autofill.inline.UiVersions
 import com.reword.app.R
 import com.reword.app.crypto.SecureStorage
 import com.reword.app.model.Account
 import com.reword.app.model.Site
-import com.reword.app.model.Vault
-import java.net.URI
+import kotlinx.coroutines.*
+import java.util.UUID
 
-/**
- * System-wide Autofill Service for ReWord.
- *
- * Intercepts autofill requests across all Android native apps and mobile web browsers.
- * Parses AssistStructure, matches target domain/package to vault records,
- * and securely fills credentials (with Biometric verification if locked).
- */
 class ReWordAutofillService : AutofillService() {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    override fun onFillRequest(
-        request: FillRequest,
-        cancellationSignal: CancellationSignal,
-        callback: FillCallback
-    ) {
-        val structure = request.fillContexts.lastOrNull()?.structure
-        if (structure == null) {
-            callback.onSuccess(null)
-            return
-        }
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
+    }
 
-        // Parse view hierarchy
-        val parsed = parseStructure(structure)
-        val targetUser = parsed.usernameFields.firstOrNull()
-        val targetPass = parsed.passwordFields.firstOrNull()
-
-        // ONLY trigger if at least one targetUser (email/username) or targetPass (password) is found
-        if (targetUser == null && targetPass == null) {
-            callback.onSuccess(null)
-            return
-        }
-
-        val storage = SecureStorage(applicationContext)
-        val activeVault = SecureStorage.activeVault
-
-        // If vault is locked, prompt user to unlock via Biometric Authentication
-        if (activeVault == null) {
-            val response = buildAuthResponse(parsed, storage, request)
-            callback.onSuccess(response)
-            return
-        }
-
-        // Vault is unlocked: find matching site & accounts
-        val matchingSites = findMatchingSites(activeVault, parsed.webDomain, parsed.packageName)
-        val candidateSites = when {
-            matchingSites.isNotEmpty() -> matchingSites
-            targetPass != null -> activeVault.sites.take(5) // Only suggest vault accounts when a password field is present
-            else -> emptyList()
-        }
-
-        if (candidateSites.isEmpty()) {
-            callback.onSuccess(null)
-            return
-        }
-
-        val responseBuilder = FillResponse.Builder()
-        var hasDatasets = false
-        for (site in candidateSites) {
-            for (acc in site.accounts.take(3)) {
-                val dataset = buildDataset(site, acc, targetUser, targetPass, request)
-                if (dataset != null) {
-                    responseBuilder.addDataset(dataset)
-                    hasDatasets = true
+    override fun onFillRequest(request: FillRequest, cancellationSignal: CancellationSignal, callback: FillCallback) {
+        val job = scope.launch {
+            val response = try {
+                val structure = request.fillContexts.lastOrNull()?.structure
+                if (structure == null) null else createResponse(parseStructure(structure, cancellationSignal), request)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // No credentials, field contents, or URLs in diagnostic logs.
+                Log.w("ReWordAutofill", "Fill request failed: ${e.javaClass.simpleName}")
+                null
+            }
+            if (!cancellationSignal.isCanceled && isActive) {
+                try { callback.onSuccess(response) }
+                catch (e: Exception) {
+                    Log.w("ReWordAutofill", "Fill callback failed: ${e.javaClass.simpleName}")
                 }
             }
         }
-
-        // Enable save prompt if password field exists
-        val saveIds = mutableListOf<AutofillId>()
-        targetPass?.let { saveIds.add(it) }
-        targetUser?.let { saveIds.add(it) }
-        if (saveIds.isNotEmpty()) {
-            val saveInfo = SaveInfo.Builder(
-                SaveInfo.SAVE_DATA_TYPE_PASSWORD or SaveInfo.SAVE_DATA_TYPE_USERNAME,
-                saveIds.toTypedArray()
-            ).build()
-            responseBuilder.setSaveInfo(saveInfo)
-        }
-
-        if (hasDatasets) {
-            callback.onSuccess(responseBuilder.build())
-        } else {
-            callback.onSuccess(null)
-        }
+        cancellationSignal.setOnCancelListener { job.cancel() }
     }
 
     override fun onSaveRequest(request: SaveRequest, callback: SaveCallback) {
-        // Handle saving/updating accounts from autofill save prompt
+        // Saving is not implemented; do not advertise a save prompt in fill responses.
         callback.onSuccess()
     }
 
-    private fun buildDataset(
-        site: Site,
-        acc: Account,
-        usernameId: AutofillId?,
-        passwordId: AutofillId?,
-        request: FillRequest
-    ): Dataset? {
-        if (usernameId == null && passwordId == null) return null
+    private fun createResponse(parsed: ParsedStructure, request: FillRequest): FillResponse? {
+        if (parsed.packageName == packageName) return null
+        val username = parsed.usernameFields.firstOrNull { it == parsed.focusedId } ?: parsed.usernameFields.firstOrNull()
+        val password = parsed.passwordFields.firstOrNull { it == parsed.focusedId } ?: parsed.passwordFields.firstOrNull()
+        if (username == null && password == null) return null
+        // Do not offer credentials while the user is typing into chat/search/OTP fields.
+        if (parsed.focusedId != null && parsed.focusedId !in parsed.usernameFields && parsed.focusedId !in parsed.passwordFields) return null
+        val vault = SecureStorage.activeVault
+        val matches = vault?.let { AutofillSiteMatcher.find(it, parsed.webDomain, parsed.packageName) }.orEmpty()
+        if (vault == null || matches.isEmpty()) return buildAuthResponse(parsed, username, password, request)
 
-        val presentation = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
-            setTextViewText(R.id.autofill_title, site.name.ifBlank { site.url })
-            setTextViewText(R.id.autofill_subtitle, acc.user.ifBlank { "••••••••" })
-        }
-
-        val inlinePresentation = createInlinePresentation(
-            request,
-            site.name.ifBlank { site.url },
-            acc.user.ifBlank { "حساب ReWord" }
-        )
-
-        val builder = Dataset.Builder(presentation)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && inlinePresentation != null) {
-            builder.setInlinePresentation(inlinePresentation)
-            usernameId?.let {
-                builder.setValue(it, AutofillValue.forText(acc.user), presentation, inlinePresentation)
-            }
-            passwordId?.let {
-                builder.setValue(it, AutofillValue.forText(acc.pass), presentation, inlinePresentation)
-            }
-        } else {
-            usernameId?.let {
-                builder.setValue(it, AutofillValue.forText(acc.user), presentation)
-            }
-            passwordId?.let {
-                builder.setValue(it, AutofillValue.forText(acc.pass), presentation)
+        val builder = FillResponse.Builder()
+        var count = 0
+        for (site in matches) {
+            for (account in site.accounts) {
+                if (count >= 20) break
+                builder.addDataset(buildDataset(site, account, username, password, request, count++))
             }
         }
+        return if (count > 0) builder.build() else buildAuthResponse(parsed, username, password, request)
+    }
 
+    private fun presentation(title: String, subtitle: String) = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
+        setTextViewText(R.id.autofill_title, title)
+        setTextViewText(R.id.autofill_subtitle, subtitle)
+    }
+
+    private fun buildDataset(site: Site, account: Account, username: AutofillId?, password: AutofillId?, request: FillRequest, index: Int): Dataset {
+        val title = site.name.ifBlank { site.url }
+        val subtitle = account.user.ifBlank { "حساب ReWord" }
+        val menu = presentation(title, subtitle)
+        val builder = Dataset.Builder(menu)
+        val inline = createInlinePresentation(request, title, subtitle, index)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && inline != null) builder.setInlinePresentation(inline)
+        username?.let { builder.setValue(it, AutofillValue.forText(account.user), menu) }
+        password?.let { builder.setValue(it, AutofillValue.forText(account.pass), menu) }
         return builder.build()
     }
 
-    private fun createInlinePresentation(
-        request: FillRequest,
-        title: String,
-        subtitle: String
-    ): android.service.autofill.InlinePresentation? {
+    private fun createInlinePresentation(request: FillRequest, title: String, subtitle: String, index: Int): InlinePresentation? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
         val inlineRequest = request.inlineSuggestionsRequest ?: return null
-        val spec = inlineRequest.inlinePresentationSpecs.firstOrNull() ?: return null
-
+        if (index >= inlineRequest.maxSuggestionCount) return null
+        val specs = inlineRequest.inlinePresentationSpecs
+        val spec = specs.getOrNull(index.coerceAtMost(specs.lastIndex)) ?: return null
         return try {
-            val emptyIntent = Intent()
-            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-            val pendingIntent = PendingIntent.getActivity(this, 0, emptyIntent, flags)
-
-            val slice = androidx.autofill.inline.v1.InlineSuggestionUi.newContentBuilder(pendingIntent)
-                .setContentDescription("$title - $subtitle")
-                .setTitle(title)
-                .setSubtitle(subtitle)
-                .build()
-                .slice
-            android.service.autofill.InlinePresentation(slice, spec, false)
-        } catch (_: Exception) {
-            null
-        }
+            if (!UiVersions.getVersions(spec.style).contains(UiVersions.INLINE_UI_VERSION_1)) return null
+            val action = PendingIntent.getActivity(this, 0, Intent(this, com.reword.app.MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
+            val content: UiVersions.Content = androidx.autofill.inline.v1.InlineSuggestionUi.newContentBuilder(action)
+                .setContentDescription("$title - $subtitle").setTitle(title).setSubtitle(subtitle).build()
+            InlinePresentation(content.slice, spec, false)
+        } catch (_: Exception) { null }
     }
 
-    /**
-     * Builds response that triggers Biometric Auth before revealing credentials.
-     */
-    private fun buildAuthResponse(
-        parsed: ParsedStructure,
-        storage: SecureStorage,
-        request: FillRequest
-    ): FillResponse? {
-        val targetIds = mutableListOf<AutofillId>()
-        parsed.usernameFields.firstOrNull()?.let { targetIds.add(it) }
-        parsed.passwordFields.firstOrNull()?.let { targetIds.add(it) }
-        if (targetIds.isEmpty()) return null
-
+    private fun buildAuthResponse(parsed: ParsedStructure, username: AutofillId?, password: AutofillId?, request: FillRequest): FillResponse {
         val intent = Intent(this, AutofillAuthActivity::class.java).apply {
+            data = Uri.parse("reword-autofill:${UUID.randomUUID()}")
             putExtra(AutofillAuthActivity.EXTRA_DOMAIN, parsed.webDomain)
             putExtra(AutofillAuthActivity.EXTRA_PACKAGE, parsed.packageName)
-            putExtra(AutofillAuthActivity.EXTRA_USER_FIELD, parsed.usernameFields.firstOrNull())
-            putExtra(AutofillAuthActivity.EXTRA_PASS_FIELD, parsed.passwordFields.firstOrNull())
+            putExtra(AutofillAuthActivity.EXTRA_USER_FIELD, username)
+            putExtra(AutofillAuthActivity.EXTRA_PASS_FIELD, password)
         }
-
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE
-        } else {
-            PendingIntent.FLAG_CANCEL_CURRENT
-        }
-
-        val pendingIntent = PendingIntent.getActivity(this, 1001, intent, flags)
-        val intentSender: IntentSender = pendingIntent.intentSender
-
-        val presentation = RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
-            setTextViewText(R.id.autofill_title, "إلغاء قفل ReWord")
-            setTextViewText(R.id.autofill_subtitle, "اضغط للمصادقة بالبصمة للملء التلقائي")
-        }
-
-        val responseBuilder = FillResponse.Builder()
-        val inlinePresentation = createInlinePresentation(
-            request,
-            "إلغاء قفل ReWord",
-            "المصادقة للملء التلقائي"
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && inlinePresentation != null) {
-            responseBuilder.setAuthentication(targetIds.toTypedArray(), intentSender, presentation, inlinePresentation)
-        } else {
-            responseBuilder.setAuthentication(targetIds.toTypedArray(), intentSender, presentation)
-        }
-
-        return responseBuilder.build()
-    }
-
-    private fun findMatchingSites(vault: Vault, webDomain: String?, packageName: String?): List<Site> {
-        val cleanDomain = webDomain?.let { extractHost(it) }?.lowercase()
-        val pkg = packageName?.lowercase()
-
-        return vault.sites.filter { site ->
-            val siteHost = extractHost(site.url).lowercase()
-            val siteName = site.name.lowercase()
-
-            when {
-                // Direct domain match (e.g. twitter.com)
-                cleanDomain != null && siteHost.isNotEmpty() && (cleanDomain.contains(siteHost) || siteHost.contains(cleanDomain)) -> true
-                // Package name matching (e.g. com.twitter.android contains "twitter")
-                pkg != null && siteName.isNotEmpty() && (pkg.contains(siteName) || siteName.contains(pkg)) -> true
-                pkg != null && siteHost.isNotEmpty() && pkg.contains(siteHost.split(".").firstOrNull() ?: "") -> true
-                else -> false
-            }
-        }
-    }
-
-    private fun extractHost(raw: String): String {
-        return try {
-            val url = if (!raw.contains("://")) "https://$raw" else raw
-            val host = URI(url).host ?: raw
-            host.removePrefix("www.")
-        } catch (_: Exception) {
-            raw.removePrefix("www.")
-        }
+        // Separate pending intents keep concurrent sessions from replacing each other's field IDs.
+        val flags = PendingIntent.FLAG_ONE_SHOT or
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
+        val auth = PendingIntent.getActivity(this, 0, intent, flags)
+        val title = if (SecureStorage.activeVault == null) "فتح ReWord" else "اختيار حساب من ReWord"
+        val subtitle = "اضغط للتحقق واختيار حساب للملء التلقائي"
+        val menu = presentation(title, subtitle)
+        // Dataset authentication must be paired with a Dataset result from the activity.
+        val dataset = Dataset.Builder(menu).setAuthentication(auth.intentSender)
+        val inline = createInlinePresentation(request, title, subtitle, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && inline != null) dataset.setInlinePresentation(inline)
+        username?.let { dataset.setValue(it, null, menu) }
+        password?.let { dataset.setValue(it, null, menu) }
+        return FillResponse.Builder().addDataset(dataset.build()).build()
     }
 
     private data class ParsedStructure(
-        var packageName: String? = null,
+        val packageName: String?,
         var webDomain: String? = null,
+        var focusedId: AutofillId? = null,
         val usernameFields: MutableList<AutofillId> = mutableListOf(),
         val passwordFields: MutableList<AutofillId> = mutableListOf(),
-        val allEditableFields: MutableList<AutofillId> = mutableListOf()
+        val editableFields: MutableList<AutofillId> = mutableListOf()
     )
 
-    private fun parseStructure(structure: AssistStructure): ParsedStructure {
-        val parsed = ParsedStructure()
-        parsed.packageName = structure.activityComponent?.packageName
-
-        for (i in 0 until structure.windowNodeCount) {
-            val node = structure.getWindowNodeAt(i).rootViewNode
-            traverseNode(node, parsed)
+    private fun parseStructure(structure: AssistStructure, cancellation: CancellationSignal): ParsedStructure {
+        val parsed = ParsedStructure(structure.activityComponent?.packageName)
+        val nodes = java.util.ArrayDeque<AssistStructure.ViewNode>()
+        for (i in structure.windowNodeCount - 1 downTo 0) nodes.addLast(structure.getWindowNodeAt(i).rootViewNode)
+        var count = 0
+        // Iteration avoids stack overflow on deeply nested app/browser hierarchies.
+        while (nodes.isNotEmpty() && count++ < 10000) {
+            cancellation.throwIfCanceled()
+            val node = nodes.removeLast()
+            val domain = node.webDomain?.takeIf { it.isNotBlank() }
+            if (parsed.webDomain == null || node.isFocused) {
+                if (domain != null) parsed.webDomain = domain
+            }
+            val id = node.autofillId
+            val html = node.htmlInfo
+            val attributes = html?.attributes.orEmpty().associate { it.first.lowercase(java.util.Locale.ROOT) to it.second }
+            val hints = node.autofillHints.orEmpty().toList() + attributes["autocomplete"].orEmpty().split(' ')
+            val htmlInput = html?.tag.equals("input", true)
+            val editable = node.isEnabled && (node.inputType != 0 ||
+                node.autofillType == android.view.View.AUTOFILL_TYPE_TEXT ||
+                node.className.orEmpty().contains("EditText", true) || htmlInput)
+            if (node.isFocused && editable) parsed.focusedId = id
+            val labels = listOf(node.idEntry, node.hint, node.contentDescription,
+                attributes["name"], attributes["id"], attributes["placeholder"], attributes["aria-label"]).joinToString(" ") { it?.toString().orEmpty() }
+            val kind = CredentialFieldClassifier.classify(node.inputType, editable, hints, labels, attributes["type"])
+            if (id != null) {
+                when (kind) {
+                    CredentialFieldClassifier.Kind.USERNAME -> { parsed.usernameFields.add(id); parsed.editableFields.add(id) }
+                    CredentialFieldClassifier.Kind.PASSWORD -> { parsed.passwordFields.add(id); parsed.editableFields.add(id) }
+                    CredentialFieldClassifier.Kind.CANDIDATE -> parsed.editableFields.add(id)
+                    CredentialFieldClassifier.Kind.NONE -> Unit
+                }
+            }
+            for (i in node.childCount - 1 downTo 0) nodes.addLast(node.getChildAt(i))
         }
-
-        // Heuristic fallback ONLY when an actual password field exists on the screen:
-        // In standard login forms, any valid non-password editable field before the password is the username/email.
         if (parsed.passwordFields.isNotEmpty() && parsed.usernameFields.isEmpty()) {
-            val firstPasswordId = parsed.passwordFields.first()
-            val passIndex = parsed.allEditableFields.indexOf(firstPasswordId)
-            if (passIndex > 0) {
-                parsed.usernameFields.add(parsed.allEditableFields[passIndex - 1])
-            }
+            val beforePassword = parsed.editableFields.indexOf(parsed.passwordFields.first()) - 1
+            if (beforePassword >= 0) parsed.usernameFields.add(parsed.editableFields[beforePassword])
         }
-
-        // Solitary editable fields without credentials are never treated as usernames (prevents WhatsApp/chat popups).
         return parsed
-    }
-
-    private fun traverseNode(node: AssistStructure.ViewNode, parsed: ParsedStructure) {
-        // Extract web domain from browser view node
-        node.webDomain?.let {
-            if (parsed.webDomain == null) parsed.webDomain = it
-        }
-
-        val autofillId = node.autofillId
-        val hints = node.autofillHints?.map { it.lowercase().trim() } ?: emptyList()
-        val idEntry = node.idEntry?.lowercase().orEmpty()
-        val hintText = (node.hint?.toString() ?: "").lowercase()
-        val text = (node.text?.toString() ?: "").lowercase()
-        val contentDesc = (node.contentDescription?.toString() ?: "").lowercase()
-        val className = node.className.orEmpty()
-        val inputType = node.inputType
-
-        val classType = inputType and InputType.TYPE_MASK_CLASS
-        val variation = inputType and InputType.TYPE_MASK_VARIATION
-        val isMultiLine = (inputType and InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0
-
-        val combinedText = "$idEntry $hintText $text $contentDesc"
-
-        // Chat / messaging / search exclusions (WhatsApp, Telegram, Notes, Search bars, etc.)
-        val isMessageVariation = variation in listOf(
-            InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE,
-            InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE,
-            InputType.TYPE_TEXT_VARIATION_FILTER
-        )
-
-        val hasNegativeKeyword = listOf(
-            "message", "chat", "msg", "comment", "search", "query", "filter", "compose", "tweet", "post",
-            "رسالة", "رساله", "دردشة", "دردشه", "بحث", "تعليق", "منشور", "تغريدة"
-        ).any { combinedText.contains(it) }
-
-        // 1. Password detection
-        val isTextPasswordVariation = classType == InputType.TYPE_CLASS_TEXT && variation in listOf(
-            InputType.TYPE_TEXT_VARIATION_PASSWORD,
-            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
-            InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD
-        )
-        val isNumericPassword = classType == InputType.TYPE_CLASS_NUMBER &&
-            variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD
-
-        val hasPasswordHint = hints.any { h ->
-            h.contains("password") || h.contains("pwd")
-        } || listOf("password", "passwd", "pwd", "passcode", "secret", "pin", "كلمة المرور", "كلمه المرور", "كلمة_المرور", "السر", "رمز المرور", "رمز_المرور").any { combinedText.contains(it) }
-
-        val isPassword = isTextPasswordVariation || isNumericPassword || hasPasswordHint
-
-        // 2. Email detection
-        val isEmailVariation = classType == InputType.TYPE_CLASS_TEXT && variation in listOf(
-            InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
-            InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
-        )
-        val hasEmailHint = hints.any { h ->
-            h.contains("email") || h.contains("emailaddress")
-        } || listOf("email", "e-mail", "mail", "بريد", "إلكتروني", "الكتروني", "البريد").any { combinedText.contains(it) }
-
-        val isEmail = (isEmailVariation || hasEmailHint) && !isMultiLine && !isMessageVariation && !hasNegativeKeyword
-
-        // 3. Username detection
-        val hasUsernameHint = hints.any { h ->
-            h.contains("username") || h.contains("login")
-        } || listOf("username", "user_name", "user-name", "userid", "user_id", "login", "اسم المستخدم", "اسم_المستخدم", "اسم مستخدم", "المستخدم").any { combinedText.contains(it) }
-
-        val isUsername = hasUsernameHint && !isMultiLine && !isMessageVariation && !hasNegativeKeyword
-
-        // General single-line editable candidate for login form heuristic (strictly non-message / non-chat)
-        val isCandidateField = (autofillId != null) && (
-            className.contains("EditText", ignoreCase = true) ||
-            className.contains("TextInput", ignoreCase = true) ||
-            classType == InputType.TYPE_CLASS_TEXT
-        ) && !isMultiLine && !isMessageVariation && !hasNegativeKeyword
-
-        if (autofillId != null) {
-            if (isPassword) {
-                if (!parsed.passwordFields.contains(autofillId)) {
-                    parsed.passwordFields.add(autofillId)
-                }
-                if (!parsed.allEditableFields.contains(autofillId)) {
-                    parsed.allEditableFields.add(autofillId)
-                }
-            } else if (isEmail || isUsername) {
-                if (!parsed.usernameFields.contains(autofillId)) {
-                    parsed.usernameFields.add(autofillId)
-                }
-                if (!parsed.allEditableFields.contains(autofillId)) {
-                    parsed.allEditableFields.add(autofillId)
-                }
-            } else if (isCandidateField) {
-                if (!parsed.allEditableFields.contains(autofillId)) {
-                    parsed.allEditableFields.add(autofillId)
-                }
-            }
-        }
-
-        for (i in 0 until node.childCount) {
-            traverseNode(node.getChildAt(i), parsed)
-        }
     }
 }

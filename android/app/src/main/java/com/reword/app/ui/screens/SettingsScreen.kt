@@ -236,7 +236,7 @@ fun SettingsScreen(
 private fun openAutofillSettings(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
-            data = Uri.parse("package:com.reword.app")
+            data = Uri.parse("package:${context.packageName}")
         }
         try {
             context.startActivity(intent)

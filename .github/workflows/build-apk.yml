@@ -1,4 +1,4 @@
-name: Build & Release Android APK
+name: Verify & Build Android APK
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
     name: Build Android APK
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout Code
@@ -30,10 +30,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
 
-      - name: Build Debug APK with Gradle
+      - name: Verify and build Android APK
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew testDebugUnitTest assembleDebug lintDebug --no-daemon --stacktrace
 
       - name: Prepare APK artifact
         run: |
@@ -46,9 +46,15 @@ jobs:
           path: ReWord.apk
           if-no-files-found: error
 
-      - name: Update GitHub Release v1.2.1 Asset
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build side-by-side autofill test APK
         run: |
-          gh release upload v1.2.1 ReWord.apk --clobber || true
+          cd android
+          ./gradlew -I tools/autofill-test.init.gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Upload autofill test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ReWord-Autofill-Test-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
 

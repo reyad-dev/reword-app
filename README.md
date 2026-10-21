@@ -13,6 +13,8 @@
 [![Encryption](https://img.shields.io/badge/Encryption-AES--256--GCM%20%2B%20PBKDF2%20(310k)-blueviolet)](#-نموذج-الأمان-والتشفير-security--cryptography-model)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
+**Android 1.2.2:** [Release & APK downloads](https://github.com/reyad-dev/reword-app/releases/tag/v1.2.2) · [Installation and signing notes](android/CHANGELOG.md#downloads-and-installation).
+
 ---
 
 ### 🌐 اختار لغة الدليل / Choose Language:
