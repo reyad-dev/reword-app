@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="repo-icon.svg" width="160" alt="ReWord password manager logo" />
+  <img src="repo-icon.svg" width="160" alt="ReWord by Reyad password manager logo" />
 </p>
 
-# 🛡️ ReWord - Secure Zero-Knowledge Password Manager & System Autofill Suite
-### مدير كلمات المرور الآمن والمشفر بمبدأ المعرفة الصفرية (Zero-Knowledge) مفتوح المصدر
+# 🛡️ ReWord by Reyad — Open Source Zero-Knowledge Password Manager & Autofill Suite
+### مدير كلمات المرور الآمن والمشفر بمبدأ المعرفة الصفرية (Zero-Knowledge) من تطوير Mohamed Reyad
 
 [![Cloudflare Pages](https://img.shields.io/badge/Frontend-Cloudflare%20Pages-f38020?logo=cloudflare)](https://pages.cloudflare.com/)
 [![Cloudflare Workers](https://img.shields.io/badge/Backend-Cloudflare%20Workers%20KV-F38020?logo=cloudflare)](https://workers.cloudflare.com/)
@@ -12,6 +12,8 @@
 [![Download APK](https://img.shields.io/badge/Download-ReWord.apk-success?logo=android)](./ReWord.apk)
 [![Encryption](https://img.shields.io/badge/Encryption-AES--256--GCM%20%2B%20PBKDF2%20(310k)-blueviolet)](#-نموذج-الأمان-والتشفير-security--cryptography-model)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+
+**ReWord by Reyad**, created by **Mohamed Reyad (@reyad-dev)**, is an open-source zero-knowledge password manager with encrypted sync, Chrome autofill, a native Android app, and self-hosted Cloudflare deployment.
 
 **Android 1.2.2:** [Release & APK downloads](https://github.com/reyad-dev/reword-app/releases/tag/v1.2.2) · [Installation and signing notes](android/CHANGELOG.md#downloads-and-installation).
 
@@ -27,7 +29,7 @@
 
 ## 🌟 نظرة عامة (Overview)
 
-**ReWord** هو نظام متكامل ومفتوح المصدر لإدارة كلمات المرور وتأمين الهوية الرقمية، مصمم بالكامل وفق مبدأ **المعرفة الصفرية (Zero-Knowledge)** ونهج **الاستضافة الذاتية المجانية (Self-Hosted)**. 
+**ReWord by Reyad** هو نظام متكامل ومفتوح المصدر من تطوير **محمد رياض (@reyad-dev)** لإدارة كلمات المرور وتأمين الهوية الرقمية، مصمم بالكامل وفق مبدأ **المعرفة الصفرية (Zero-Knowledge)** ونهج **الاستضافة الذاتية المجانية (Self-Hosted)**. 
 
 يتيح لك النظام امتلاك خزنتك المشفرة دون الاعتماد على أي خوادم تتبع لأطراف ثالثة:
 * **تطبيق ويب تقدمي (PWA):** يعمل محلياً بدون إنترنت (Offline-First) ويُستضاف مجاناً على **Cloudflare Pages**.
@@ -87,7 +89,6 @@
 | **أبل سفاري (Apple Safari)** | `.csv` | `Title`, `URL`, `User Name`, `Password` |
 | **بت واردن (Bitwarden)** | `.csv` | `folder`, `favorite`, `type`, `name`, `notes`, `login_uri`, `login_username`, `login_password` |
 | **أي ملف CSV عام** | `.csv` | أي ملف يحتوي على أعمدة للرابط (`url`/`origin`) واسم المستخدم (`username`/`login`/`user`) وكلمة المرور (`password`) |
-
 ### خطوات استيراد كلمات المرور:
 1. افتح تطبيق الويب (أو التطبيق المثبت على جهازك).
 2. افتح **الإعدادات (Settings)** من أعلى الشاشة.
@@ -301,7 +302,7 @@ npx wrangler deploy
 
 ## 🌟 Overview
 
-**ReWord** is an open-source, client-side encrypted password manager and system autofill suite built strictly on the **Zero-Knowledge** architecture.
+**ReWord by Reyad** is an open-source, client-side encrypted password manager and system autofill suite created by **Mohamed Reyad (@reyad-dev)** and built strictly on the **Zero-Knowledge** architecture.
 
 It empowers you to host your own encrypted password vault for **$0 forever** using Cloudflare's serverless infrastructure without relying on proprietary third-party servers:
 * **Web App (PWA):** Offline-first Progressive Web App deployable to **Cloudflare Pages**.
@@ -357,7 +358,6 @@ It empowers you to host your own encrypted password vault for **$0 forever** usi
 | **Apple Safari** | `.csv` | `Title`, `URL`, `User Name`, `Password` |
 | **Bitwarden** | `.csv` | `folder`, `favorite`, `type`, `name`, `notes`, `login_uri`, `login_username`, `login_password` |
 | **Generic Password CSV** | `.csv` | Any file containing URL/Origin, Username/Login/Email, and Password columns |
-
 ---
 
 ## 🚀 Step-by-Step Cloudflare Deployment Guide
@@ -490,6 +490,10 @@ sequenceDiagram
 ```
 
 ---
+
+## 👤 Creator
+
+**ReWord by Reyad** is created and maintained by **Mohamed Reyad (@reyad-dev)**.
 
 ## 📄 License
 
